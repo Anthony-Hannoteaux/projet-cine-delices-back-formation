@@ -20,7 +20,7 @@ const app = express();
 // Paramétrage de notre moteur de vue
 app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
-app.set('views', './src/views')
+app.set('views', './src/app/views')
 
 // Appel du router de notre application
 app.use(router);
