@@ -1,9 +1,8 @@
 import express from 'express';
+import mainController from './controllers/mainController.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('Welcome to the Ciné-Délices API');
-});
+router.get('/', mainController.home)
 
 export default router;
