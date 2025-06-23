@@ -3,6 +3,8 @@
 import express from "express";
 // Import de notre dépendance qui nous permettra de faire appel à nos variables d'états
 import * as dotenv from "dotenv";
+// Import de notre routeur
+import router from "./src/app/router.js";
 
 // Appel de notre fichier .env pour nos variables d'états
 dotenv.config();
@@ -11,21 +13,20 @@ dotenv.config();
  * Appel de la fonction "Top-Level" de notre framework
  * @link https://expressjs.com/en/5x/api.html#express
  */ 
+// Création de notre application express
 const app = express();
 
 
 // Paramétrage de notre moteur de vue
 app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
-app.set('views', './src/views')
+app.set('views', './src/app/views')
+
+// Appel du router de notre application
+app.use(router);
 
 // Appel de notre port d'écoute
 const port = process.env.PORT || 3000
-
-// Premier test de rendu
-app.get('/', (req, res) => {
-    res.send("<h1>Test</h1>")
-})
 
 // Mise en écoute de notre serveur sur notre port défini
 app.listen(port, () => {
