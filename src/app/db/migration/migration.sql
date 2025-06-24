@@ -7,7 +7,7 @@ BEGIN;
 -- Instruction permettant la rejouabilité
 -- Si les tables existes alors elles seront supprimé
 -- Le mot clé CASCADE permet de supprimer aussi les objets dépendants à ces tables
-DROP TABLE IF EXISTS "recipe", "category", "ingredient", "user", "step", "movie", "genre" CASCADE;
+DROP TABLE IF EXISTS "recipe", "category", "user", "step", "recipe_has_category" CASCADE;
 
 -- Instruction pour créer la table (ici "user")
 CREATE TABLE "user" (
@@ -27,25 +27,6 @@ CREATE TABLE "category" (
     "name" VARCHAR(24) NOT NULL
 );
 
-CREATE TABLE "movie" (
-    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "title" TEXT NOT NULL,
-    "year" INTEGER NOT NULL,
-    "abstract" TEXT,
-    "picture" TEXT
-);
-
-CREATE TABLE "genre" (
-    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE "ingredient" (
-    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" VARCHAR(32) UNIQUE NOT NULL,
-    "picture" TEXT UNIQUE NOT NULL
-);
-
 CREATE TABLE "recipe" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "title" VARCHAR(32) NOT NULL,
@@ -57,8 +38,13 @@ CREATE TABLE "recipe" (
     "cook_time" INTEGER NOT NULL,
     "story" TEXT UNIQUE,
     "picture" TEXT UNIQUE,
-    "user_id" INTEGER REFERENCES "user"("id") NOT NULL,
-    "movie_id" INTEGER REFERENCES "movie"("id") NOT NULL
+    "user_id" INTEGER REFERENCES "user"("id") NOT NULL
+);
+
+CREATE TABLE "recipe_has_category" (
+    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "recipe_id" INTEGER REFERENCES "recipe"("id"),
+    "category_id" INTEGER REFERENCES "category"("id")
 );
 
 CREATE TABLE "step" (
