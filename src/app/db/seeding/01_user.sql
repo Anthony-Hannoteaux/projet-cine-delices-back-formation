@@ -2,7 +2,7 @@
 
 BEGIN;
 
-TRUNCATE TABLE "user" RESTART IDENTITY;
+TRUNCATE TABLE "user" RESTART IDENTITY CASCADE;
 
 INSERT INTO "user" ("username", "email", "password") VALUES
     ('chef1', 'chef1@yahoo.fr', 'password1'),
