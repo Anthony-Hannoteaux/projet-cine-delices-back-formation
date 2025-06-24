@@ -2,7 +2,7 @@
 
 BEGIN;
 
-TRUNCATE TABLE "step" RESTART IDENTITY;
+TRUNCATE TABLE "step" RESTART IDENTITY CASCADE;
 
     INSERT INTO "step" ("number", "description", "recipe_id") VALUES
         -- Étapes pour la Salade César
