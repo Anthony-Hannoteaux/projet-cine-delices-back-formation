@@ -55,10 +55,6 @@ class Recipe {
         return this.#difficulty;
     }
     set difficulty(value) {
-        const validDifficulties = ['facile', 'moyen', 'difficile'];
-        if (!validDifficulties.includes(value)) {
-            throw new Error(`La difficulté doit être l'une des valeurs suivantes : ${validDifficulties.join(', ')}.`);
-        }
         this.#difficulty = value;
     }
 
@@ -66,10 +62,6 @@ class Recipe {
         return this.#budget;
     }
     set budget(value) {
-        const validBudgets = ['économique', 'raisonnable', 'onéreux'];
-        if (!validBudgets.includes(value)) {
-            throw new Error(`Le budget doit être l'une des valeurs suivantes : ${validBudgets.join(', ')}.`);
-        }
         this.#budget = value;
     }
 
