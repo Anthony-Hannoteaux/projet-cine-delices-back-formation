@@ -1,4 +1,4 @@
-import db from '../../app/db.js';
+import client from '../../app/database.js';
 
 class Recipe {
     // Attributs de la classe Recipe
@@ -141,7 +141,7 @@ class Recipe {
     // Utilisation de la méthode db.query pour insérer les données dans la table "recipes"
     // Les paramètres de la requête sont passés sous forme de tableau
     async create() {
-        const result = await db.query('INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+        const result = await client.query('INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
             [
                 this.title,
                 this.description,
@@ -160,12 +160,24 @@ class Recipe {
         return result.rowCount;
     }
 
+    // Méthode pour trouver toutes les recettes
+    // Méthode asynchrone pour récupérer toutes les recettes
+    // Utilisation de la méthode client
+    // .query pour sélectionner les données de la table "recipes"
+    static async findAll() {
+        const result = await client.query(`SELECT * FROM "recipe"`);
+        // Retourne un tableau d'instances de la classe Recipe
+        return result.rows;
+    }
+
+
     // Retourne une recette par son ID
     // Méthode asynchrone pour récupérer une recette par son ID
-    // Utilisation de la méthode db.query pour sélectionner les données de la table "recipes"
+    // Utilisation de la méthode client
+    // .query pour sélectionner les données de la table "recipes"
     // Le paramètre de la requête est passé sous forme de tableau
     static async findById(id) {
-        const result = await db.query(`SELECT * FROM recipe
+        const result = await client.query(`SELECT * FROM recipe
             JOIN "user" ON "recipe"."user_id" = "user"."id"
             WHERE "recipe"."id" = $1`, [id]);
 
@@ -195,7 +207,7 @@ class Recipe {
 
     // Méthode pour mettre à jour une recette
     async update() {
-        const result = await db.query(`
+        const result = await client.query(`
     UPDATE "recipe"
     SET title = $1,
         description = $2,
@@ -228,7 +240,8 @@ class Recipe {
 
     // Méthode pour supprimer une recette
     async delete() {
-        const result = await db.query('DELETE FROM recipe WHERE id = $1', [this.id]);
+        const result = await client.query(`DELETE FROM "recipe"
+            WHERE "recipe"."id" = $1`, [this.id]);
         
         // Retourne le nombre de lignes supprimées
         return result.rowCount;

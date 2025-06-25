@@ -6,9 +6,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // on crée un client depuis l'objet pg et sa classe Client
-const db = new pg.Client();
+const client = new pg.Client();
 
 // on se connecte à postegreSQL
-db.connect();
+client.connect();
 
-export default db;
+export default client;

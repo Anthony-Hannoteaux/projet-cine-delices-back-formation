@@ -1,5 +1,5 @@
 import Recipe from './src/app/models/Recipe.js';
-import db from './src/app/db.js';
+import client from './src/app/database.js';
 
 // test de la méthode create de la classe Recipe
 
@@ -32,7 +32,7 @@ import db from './src/app/db.js';
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de l’insertion : ${err.message}`);
   } finally {
-    await db.end(); // Ferme la connexion proprement
+    await client.end(); // Ferme la connexion proprement
   }
 })();*/
 
@@ -50,7 +50,7 @@ import db from './src/app/db.js';
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de la récupération de la recette : ${err.message}`);
   } finally {
-    await db.end(); // Ferme la connexion proprement
+    await client.end(); // Ferme la connexion proprement
   }
 })();*/
 
@@ -80,36 +80,22 @@ import db from './src/app/db.js';
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de la mise à jour : ${err.message}`);
   } finally {
-    await db.end(); // Ferme la connexion proprement
+    await client.end(); // Ferme la connexion proprement
   }
 })();*/
 
 // Test de la méthode delete de la classe Recipe
-(async () => {
+/*(async () => {
   try {
     // On crée une instance de la classe Recipe avec l'ID de la recette à supprimer
-    const recette = new Recipe(
-      1, // ID de la recette à mettre à jour
-      'Crêpes Suzette revisitées',
-      'Des crêpes flambées à l’orange avec une touche moderne',
-      'Raisonnable',
-      '€',
-      4,
-      10,
-      5,
-      'Un classique de la cuisine française revisité',
-      'crepes_revisitees.jpg',
-      1
-    );
-    
+    const recette = await Recipe.findById(3);
+    console.log(recette)
     // On appelle la méthode delete pour supprimer la recette de la base de données
     const result = await recette.delete();
     console.log(`Recette supprimée avec succès (${result} ligne(s)).`);
-  } catch (err) {
+}
+  catch (err) {
     // En cas d'erreur, on affiche un message d'erreur
-    console.error(`Erreur lors de la suppression : ${err.message}`);
+    console.error(`Erreur lors de la récupération de la recette : ${err.message}`);
   }
-  finally {
-    await db.end(); // Ferme la connexion proprement
-  }
-})();
+})();*/
