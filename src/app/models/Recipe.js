@@ -30,11 +30,11 @@ class Recipe {
     }
 
 
-        // Getters pour accéder aux attributs privés
+    // Getters pour accéder aux attributs privés
     get title() {
         return this.#title;
     }
-        // Setters pour modifier les attributs privés
+    // Setters pour modifier les attributs privés
     set title(value) {
         if (typeof value !== 'string' || value.trim() === '') {
             throw new Error('Le titre doit être une chaîne de caractères non vide.');
@@ -45,7 +45,7 @@ class Recipe {
     // Getter et setter pour la description
     get description() {
         return this.#description;
-    }   
+    }
     set description(value) {
         if (typeof value !== 'string' || value.trim() === '') {
             throw new Error('La description doit être une chaîne de caractères non vide.');
@@ -140,7 +140,7 @@ class Recipe {
     // Méthode asynchrone pour créer une recette
     // Utilisation de la méthode db.query pour insérer les données dans la table "recipes"
     // Les paramètres de la requête sont passés sous forme de tableau
-     async create() {
+    async create() {
         const result = await db.query('INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
             [
                 this.title,
@@ -152,18 +152,19 @@ class Recipe {
                 this.cook_time,
                 this.story,
                 this.picture,
-                this.user_id]
+                this.user_id
+            ]
         );
 
         // Retourne le nombre d'enregistrements insérés
         return result.rowCount;
-     }
+    }
 
-     // Retourne une recette par son ID
-     // Méthode asynchrone pour récupérer une recette par son ID
-     // Utilisation de la méthode db.query pour sélectionner les données de la table "recipes"
-     // Le paramètre de la requête est passé sous forme de tableau
-     static async findById(id) {
+    // Retourne une recette par son ID
+    // Méthode asynchrone pour récupérer une recette par son ID
+    // Utilisation de la méthode db.query pour sélectionner les données de la table "recipes"
+    // Le paramètre de la requête est passé sous forme de tableau
+    static async findById(id) {
         const result = await db.query(`SELECT * FROM recipe
             JOIN "user" ON "recipe"."user_id" = "user"."id"
             WHERE "recipe"."id" = $1`, [id]);
@@ -191,11 +192,53 @@ class Recipe {
             recipeData.user_id
         );
     }
+
+    // Méthode pour mettre à jour une recette
+    async update() {
+        const result = await db.query(`
+    UPDATE "recipe"
+    SET title = $1,
+        description = $2,
+        difficulty = $3,
+        budget = $4,
+        servings = $5,
+        preparation_time = $6,
+        cook_time = $7,
+        story = $8,
+        picture = $9,
+        user_id = $10
+    WHERE id = $11
+  `, [
+            this.title,
+            this.description,
+            this.difficulty,
+            this.budget,
+            this.servings,
+            this.preparation_time,
+            this.cook_time,
+            this.story,
+            this.picture,
+            this.user_id,
+            this.id
+        ]);
+
+        return result.rowCount;
+    }
+
+
+    // Méthode pour supprimer une recette
+    async delete() {
+        const result = await db.query('DELETE FROM recipe WHERE id = $1', [this.id]);
+
+        // Vérifie si une recette a été supprimée
+        if (result.rowCount === 0) {
+            throw new Error(`Recette avec l'ID ${this.id} non trouvée.`);
+        }
+
+        // Retourne le nombre d'enregistrements supprimés
+        return result.rowCount;
+    }
 }
 
 // Exportation de la classe Recipe pour l'utiliser dans d'autres fichiers
 export default Recipe;
-
-    
-
-

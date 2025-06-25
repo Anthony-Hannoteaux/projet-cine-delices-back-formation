@@ -38,7 +38,7 @@ import db from './src/app/db.js';
 
 
 // Test de la méthode findById de la classe Recipe
-(async () => {
+/*(async () => {
   try {
     // On appelle la méthode findById pour récupérer une recette par son ID
     // Ici, on cherche la recette avec l'ID 1
@@ -49,6 +49,36 @@ import db from './src/app/db.js';
   } catch (err) {
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de la récupération de la recette : ${err.message}`);
+  } finally {
+    await db.end(); // Ferme la connexion proprement
+  }
+})();*/
+
+// Test d'update d'une recette
+(async () => {
+  try {
+    // On crée une instance de la classe Recipe avec les données de la recette à mettre à jour
+    const recette = new Recipe(
+      1, // ID de la recette à mettre à jour
+      'Crêpes Suzette revisitées',
+      'Des crêpes flambées à l’orange avec une touche moderne',
+      'Raisonnable',
+      '€',
+      4,
+      10,
+      5,
+      'Un classique de la cuisine française revisité',
+      'crepes_revisitees.jpg',
+      1
+    );
+    
+    // On appelle la méthode update pour mettre à jour la recette dans la base de données
+    const result = await recette.update();
+    console.log(`Recette mise à jour avec succès (${result} ligne(s)).`);
+  }
+  catch (err) {
+    // En cas d'erreur, on affiche un message d'erreur
+    console.error(`Erreur lors de la mise à jour : ${err.message}`);
   } finally {
     await db.end(); // Ferme la connexion proprement
   }
