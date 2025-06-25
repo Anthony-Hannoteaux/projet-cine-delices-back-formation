@@ -3,7 +3,7 @@ import db from './src/app/db.js';
 
 // test de la méthode create de la classe Recipe
 
-(async () => {
+/*(async () => {
   try {
     // On crée une instance de la classe Recipe avec les données de la recette
     // Les paramètres sont passés dans l'ordre défini par le constructeur de la classe Recipe
@@ -31,6 +31,24 @@ import db from './src/app/db.js';
   } catch (err) {
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de l’insertion : ${err.message}`);
+  } finally {
+    await db.end(); // Ferme la connexion proprement
+  }
+})();*/
+
+
+// Test de la méthode findById de la classe Recipe
+(async () => {
+  try {
+    // On appelle la méthode findById pour récupérer une recette par son ID
+    // Ici, on cherche la recette avec l'ID 1
+    const recette = await Recipe.findById(1);
+    
+    // Affiche les détails de la recette récupérée
+    console.log(`Recette trouvée : ${recette.title} - ${recette.description}`);
+  } catch (err) {
+    // En cas d'erreur, on affiche un message d'erreur
+    console.error(`Erreur lors de la récupération de la recette : ${err.message}`);
   } finally {
     await db.end(); // Ferme la connexion proprement
   }
