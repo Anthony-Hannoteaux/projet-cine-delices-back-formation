@@ -1,3 +1,5 @@
+// Import du client pg, nous permettant de réaliser nos requêtes SQL sur notre BDD
+import client from "../database.js";
 import validator from "validator";
 
 class User {
@@ -47,6 +49,14 @@ class User {
         }
         this.#password = value;
     }
+
+    // Mise en place du CRUD grâce au design pattern "Active Record"
+
+    // READ
+    static async findAll() {
+        const result = await client.query(`SELECT * FROM "user"`);
+        console.log(result.rows)
+    }
 }
 
 // Premier test d'initialisation d'instance d'un objet User
@@ -57,5 +67,7 @@ const newUser = {
 }
 
 const userTest = new User(newUser);
+
+User.findAll()
 
 console.log(userTest.username, userTest.email, userTest.password)
