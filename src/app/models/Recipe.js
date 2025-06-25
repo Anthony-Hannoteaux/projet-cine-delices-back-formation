@@ -229,13 +229,8 @@ class Recipe {
     // Méthode pour supprimer une recette
     async delete() {
         const result = await db.query('DELETE FROM recipe WHERE id = $1', [this.id]);
-
-        // Vérifie si une recette a été supprimée
-        if (result.rowCount === 0) {
-            throw new Error(`Recette avec l'ID ${this.id} non trouvée.`);
-        }
-
-        // Retourne le nombre d'enregistrements supprimés
+        
+        // Retourne le nombre de lignes supprimées
         return result.rowCount;
     }
 }

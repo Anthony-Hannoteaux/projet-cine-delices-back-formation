@@ -55,7 +55,7 @@ import db from './src/app/db.js';
 })();*/
 
 // Test d'update d'une recette
-(async () => {
+/*(async () => {
   try {
     // On crée une instance de la classe Recipe avec les données de la recette à mettre à jour
     const recette = new Recipe(
@@ -80,6 +80,36 @@ import db from './src/app/db.js';
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de la mise à jour : ${err.message}`);
   } finally {
+    await db.end(); // Ferme la connexion proprement
+  }
+})();*/
+
+// Test de la méthode delete de la classe Recipe
+(async () => {
+  try {
+    // On crée une instance de la classe Recipe avec l'ID de la recette à supprimer
+    const recette = new Recipe(
+      1, // ID de la recette à mettre à jour
+      'Crêpes Suzette revisitées',
+      'Des crêpes flambées à l’orange avec une touche moderne',
+      'Raisonnable',
+      '€',
+      4,
+      10,
+      5,
+      'Un classique de la cuisine française revisité',
+      'crepes_revisitees.jpg',
+      1
+    );
+    
+    // On appelle la méthode delete pour supprimer la recette de la base de données
+    const result = await recette.delete();
+    console.log(`Recette supprimée avec succès (${result} ligne(s)).`);
+  } catch (err) {
+    // En cas d'erreur, on affiche un message d'erreur
+    console.error(`Erreur lors de la suppression : ${err.message}`);
+  }
+  finally {
     await db.end(); // Ferme la connexion proprement
   }
 })();
