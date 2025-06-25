@@ -36,6 +36,25 @@ import client from './src/app/database.js';
   }
 })();*/
 
+// Test de la méthode findAll de la classe Recipe
+(async () => {
+  try {
+    // On appelle la méthode findAll pour récupérer toutes les recettes
+    const recettes = await Recipe.findAll();
+    // Affiche le nombre de recettes trouvées
+    console.log(`Nombre de recettes trouvées : ${recettes.length}`);
+    // Affiche les détails de chaque recette
+    recettes.forEach(recette => {
+      console.log(`Recette : ${recette.title} - ${recette.description}`);
+    });
+  } catch (err) {
+    // En cas d'erreur, on affiche un message d'erreur
+    console.error(`Erreur lors de la récupération des recettes : ${err.message}`);
+  } finally {
+    await client.end(); // Ferme la connexion proprement
+  }
+})();
+
 
 // Test de la méthode findById de la classe Recipe
 /*(async () => {
