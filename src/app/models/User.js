@@ -37,6 +37,7 @@ class User {
     }
     
     set email(value) {
+        // Vérification des contraintes grâce au package validator
         if (!validator.isEmail(value)) {
             throw new Error("Veuillez renseigner un email valide.");
         }
@@ -53,7 +54,15 @@ class User {
     // Mise en place du CRUD grâce au design pattern "Active Record"
 
     // CREATE
+    /**
+     * Création d'une méthode d'instance
+     * Création d'une nouvelle entrée grâce aus valeurs de l'instance
+     */
     create() {
+        /**
+         * On fait appel à la méthode query de la notre client pg
+         * Pour rédiger notre requêtes SQL
+         */
         const result = client.query(`
             INSERT INTO "user"
             ("username", "email", "password")
@@ -62,22 +71,25 @@ class User {
                 this.email,
                 this.password
             ])
-
             return result.rowCount;
     }
     
     // READ
+    /**
+     * Création d'une méthode statique qui sera appellé via notre classe
+     * Affichage de l'ensemble de nos entrées de l'entité "user"
+     */
     static async findAll() {
         const result = await client.query(`SELECT * FROM "user"`);
-        console.log(result.rows)
+        return result.rows
     }
 }
 
-// Premier test d'initialisation d'instance d'un objet User
+// Test d'initialisation d'instance d'un objet User
 const newUser = {
-    username: "John Doe",
+    password: "superpassword",
     email: "johndoe@mail.com",
-    password: "superpassword"
+    username: "John Doe",
 }
 
 const userTest = new User(newUser);
@@ -88,7 +100,8 @@ const userTest = new User(newUser);
 /**
  * Utilisateur créer grâce à la fonction create du CRUD
  * Mise en commentaire pour ne pas recréer le même utilisateur à chaque test
- * Car erreur du à la duplication de clé
  */
 // userTest.create()
+
+// Test de notre fonction de lecture
 User.findAll()
