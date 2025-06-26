@@ -61,7 +61,7 @@ import client from './src/app/database.js';
     })();*/
 
 // Test d'update d'une étape
-(async () => {
+/*(async () => {
     try {
         // On crée une instance de la classe Step avec les données de l'étape à mettre à jour
         const step = new Step(
@@ -78,6 +78,29 @@ import client from './src/app/database.js';
     } catch (err) {
         // En cas d'erreur, on affiche un message d'erreur
         console.error(`Erreur lors de la mise à jour : ${err.message}`);
+    } finally {
+        await client.end(); // Ferme la connexion proprement
+    }
+    })();*/
+
+// Test de la méthode delete de la classe Step
+(async () => {
+    try {
+        // On crée une instance de la classe Step avec l'ID de l'étape à supprimer
+        const step = new Step(
+        1, // ID de l'étape à supprimer
+        null, // Numéro de l'étape (non utilisé pour la suppression)
+        null, // Description de l'étape (non utilisée pour la suppression)
+        { id: 1 } // Référence à la recette (ID de la recette, non utilisée pour la suppression)
+        );
+    
+        // On appelle la méthode delete pour supprimer l'étape dans la base de données
+        const result = await step.delete();
+        // Affiche le nombre de lignes supprimées dans la base de données
+        console.log(`Étape supprimée avec succès (${result} ligne(s)).`);
+    } catch (err) {
+        // En cas d'erreur, on affiche un message d'erreur
+        console.error(`Erreur lors de la suppression : ${err.message}`);
     } finally {
         await client.end(); // Ferme la connexion proprement
     }

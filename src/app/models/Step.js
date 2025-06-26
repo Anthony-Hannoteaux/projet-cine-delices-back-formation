@@ -47,8 +47,9 @@ class Step {
         return new Step(
             stepData.id,
             stepData.number,
-            stepData.description,
-            { id: stepData.recipe_id } // Référence à la recette
+            stepData.description, {
+                id: stepData.recipe_id
+            } // Référence à la recette
         );
     }
 
@@ -73,9 +74,11 @@ class Step {
     // Delete()
     // suppression d'un objet dans la base
     async delete() {
-        const result = await client.query(`DELETE FROM step WHERE`)
+        const result = await client.query(`DELETE FROM step WHERE id = $1;`, [this.id]);
+        // retourne le nombre d'enregistrements supprimés
+        return result.rowCount;
     }
 }
 
-    // exporte la classe Step pour l'utiliser dans d'autres fichiers
+// exporte la classe Step pour l'utiliser dans d'autres fichiers
 export default Step;
