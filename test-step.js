@@ -2,7 +2,7 @@ import Step from './src/app/models/Step.js';
 import client from './src/app/database.js';
 
 // test de la méthode create de la classe Step
-(async () => {
+/*(async () => {
   try {
     // On crée une instance de la classe Step avec les données de l'étape
     const step = new Step(
@@ -19,6 +19,25 @@ import client from './src/app/database.js';
   } catch (err) {
     // En cas d'erreur, on affiche un message d'erreur
     console.error(`Erreur lors de l’insertion : ${err.message}`);
+  } finally {
+    await client.end(); // Ferme la connexion proprement
+  }
+})();*/
+
+// Test de la méthode findAll de la classe Step
+(async () => {
+  try {
+    // On appelle la méthode findAll pour récupérer toutes les étapes
+    const steps = await Step.findAll();
+    // Affiche le nombre d'étapes trouvées
+    console.log(`Nombre d'étapes trouvées : ${steps.length}`);
+    // Affiche les détails de chaque étape
+    steps.forEach(step => {
+      console.log(`Étape ${step.number} : ${step.description}`);
+    });
+  } catch (err) {
+    // En cas d'erreur, on affiche un message d'erreur
+    console.error(`Erreur lors de la récupération des étapes : ${err.message}`);
   } finally {
     await client.end(); // Ferme la connexion proprement
   }

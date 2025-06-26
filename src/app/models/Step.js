@@ -27,6 +27,13 @@ class Step {
         return result.rowCount;
     }
 
+    // recherche tous les objets dans la base
+    static async findAll() {
+        const result = await client.query(`SELECT * FROM step;`);
+        // retourne les lignes trouvées
+        return result.rows
+    }
+
     // mise à jour d'un objet dans la base
     async update() {
         const result = await client.query(`UPDATE step
