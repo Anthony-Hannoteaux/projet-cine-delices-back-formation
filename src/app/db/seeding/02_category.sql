@@ -2,8 +2,6 @@
 
 BEGIN;
 
-TRUNCATE TABLE "category" RESTART IDENTITY CASCADE;
-
 INSERT INTO "category" ("name") VALUES 
     ('Entrée'),
     ('Plat'),

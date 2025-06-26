@@ -43,7 +43,7 @@ CREATE TABLE "recipe" (
 
 CREATE TABLE "recipe_has_category" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "recipe_id" INTEGER REFERENCES "recipe"("id"),
+    "recipe_id" INTEGER REFERENCES "recipe"("id") ON DELETE CASCADE, -- Supprimer les associations si la recette est supprimée
     "category_id" INTEGER REFERENCES "category"("id")
 );
 
@@ -51,7 +51,7 @@ CREATE TABLE "step" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "number" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
-    "recipe_id" INTEGER REFERENCES "recipe"("id")
+    "recipe_id" INTEGER REFERENCES "recipe"("id") ON DELETE CASCADE
 );
 
 COMMIT;
