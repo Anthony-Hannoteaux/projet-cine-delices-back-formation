@@ -44,7 +44,7 @@ import client from './src/app/database.js';
 })();*/
 
 // Test de la méthode FindById de la classe Step
-(async () => {
+/*(async () => {
     try {
         // On appelle la méthode findById pour récupérer une étape par son ID
         // Ici, on cherche l'étape avec l'ID 1
@@ -55,6 +55,29 @@ import client from './src/app/database.js';
     } catch (err) {
         // En cas d'erreur, on affiche un message d'erreur
         console.error(`Erreur lors de la récupération de l'étape : ${err.message}`);
+    } finally {
+        await client.end(); // Ferme la connexion proprement
+    }
+    })();*/
+
+// Test d'update d'une étape
+(async () => {
+    try {
+        // On crée une instance de la classe Step avec les données de l'étape à mettre à jour
+        const step = new Step(
+        1, // ID de l'étape à mettre à jour
+        1, // Nouveau numéro de l'étape
+        'Laver et couper la salade.', // Nouvelle description de l'étape
+        { id: 1 } // Référence à la recette (ID de la recette)
+        );
+    
+        // On appelle la méthode update pour mettre à jour l'étape dans la base de données
+        const result = await step.update();
+        // Affiche le nombre de lignes mises à jour dans la base de données
+        console.log(`Étape mise à jour avec succès (${result} ligne(s)).`);
+    } catch (err) {
+        // En cas d'erreur, on affiche un message d'erreur
+        console.error(`Erreur lors de la mise à jour : ${err.message}`);
     } finally {
         await client.end(); // Ferme la connexion proprement
     }
