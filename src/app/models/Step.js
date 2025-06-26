@@ -1,4 +1,5 @@
 import slugify from "slugify";
+import client from "../database.js";
 
 class Step {
     id;
@@ -48,3 +49,6 @@ class Step {
         const result = await client.query(`DELETE FROM step WHERE`)
     }
 }
+
+    // exporte la classe Step pour l'utiliser dans d'autres fichiers
+export default Step;

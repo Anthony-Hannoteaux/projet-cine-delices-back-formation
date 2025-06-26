@@ -37,7 +37,7 @@ import client from './src/app/database.js';
 })();*/
 
 // Test de la méthode findAll de la classe Recipe
-(async () => {
+/*(async () => {
   try {
     // On appelle la méthode findAll pour récupérer toutes les recettes
     const recettes = await Recipe.findAll();
@@ -53,8 +53,7 @@ import client from './src/app/database.js';
   } finally {
     await client.end(); // Ferme la connexion proprement
   }
-})();
-
+})();*/
 
 // Test de la méthode findById de la classe Recipe
 /*(async () => {
