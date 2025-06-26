@@ -13,7 +13,7 @@ class Step {
         this.description = description;
         this.recipe = recipe;
     }
-
+    //Create()
     // ajouter un objet dans la base
     async create() {
         const result = await client.query(`INSERT INTO step
@@ -26,7 +26,7 @@ class Step {
         // retourne le nombre d'enregistrements créés
         return result.rowCount;
     }
-
+    //FindAll()
     // recherche tous les objets dans la base
     static async findAll() {
         const result = await client.query(`SELECT * FROM step;`);
@@ -34,6 +34,25 @@ class Step {
         return result.rows
     }
 
+    // FindById()
+    // recherche un objet par son id dans la base
+    static async findById(id) {
+        const result = await client.query(`SELECT * FROM step WHERE id = $1;`, [id]);
+        // vérifie si une ligne a été trouvée
+        const stepData = result.rows[0];
+        if (!stepData) {
+            throw new Error(`Aucune étape trouvée avec l'ID ${id}`);
+        }
+        // retourne une instance de la classe Step avec les données récupérées
+        return new Step(
+            stepData.id,
+            stepData.number,
+            stepData.description,
+            { id: stepData.recipe_id } // Référence à la recette
+        );
+    }
+
+    // Update()
     // mise à jour d'un objet dans la base
     async update() {
         const result = await client.query(`UPDATE step
@@ -51,6 +70,7 @@ class Step {
         return result.rowCount;
     }
 
+    // Delete()
     // suppression d'un objet dans la base
     async delete() {
         const result = await client.query(`DELETE FROM step WHERE`)

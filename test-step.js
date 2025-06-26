@@ -25,7 +25,7 @@ import client from './src/app/database.js';
 })();*/
 
 // Test de la méthode findAll de la classe Step
-(async () => {
+/*(async () => {
   try {
     // On appelle la méthode findAll pour récupérer toutes les étapes
     const steps = await Step.findAll();
@@ -41,4 +41,21 @@ import client from './src/app/database.js';
   } finally {
     await client.end(); // Ferme la connexion proprement
   }
-})();
+})();*/
+
+// Test de la méthode FindById de la classe Step
+(async () => {
+    try {
+        // On appelle la méthode findById pour récupérer une étape par son ID
+        // Ici, on cherche l'étape avec l'ID 1
+        const step = await Step.findById(2);
+        
+        // Affiche les détails de l'étape récupérée
+        console.log(`Étape trouvée : ${step.number} - ${step.description}`);
+    } catch (err) {
+        // En cas d'erreur, on affiche un message d'erreur
+        console.error(`Erreur lors de la récupération de l'étape : ${err.message}`);
+    } finally {
+        await client.end(); // Ferme la connexion proprement
+    }
+    })();
