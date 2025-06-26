@@ -12,9 +12,10 @@ class Recipe {
     #story;
     #picture;
     #user_id;
+    #movie_id;
 
 
-    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id) {
+    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id) {
         // Initialisation des attributs de la classe Recipe
         this.id = id;
         this.title = title;
@@ -27,6 +28,7 @@ class Recipe {
         this.story = story;
         this.picture = picture;
         this.user_id = user_id;
+        this.movie_id = movie_id;
     }
 
 
@@ -135,13 +137,24 @@ class Recipe {
         this.#user_id = value;
     }
 
+    //Getters et setters pour l'ID du film
+    get movie_id() {
+        return this.#movie_id;
+    }
+    set movie_id(value) {
+         if (typeof value !== 'number' || value <= 0) {
+            throw new Error('L\'ID du film doit être un nombre positif.');
+        }
+        this.#movie_id = value;
+    }
+
 
     // Ajout d'une recette dans la base de données
     // Méthode asynchrone pour créer une recette
     // Utilisation de la méthode db.query pour insérer les données dans la table "recipes"
     // Les paramètres de la requête sont passés sous forme de tableau
     async create() {
-        const result = await client.query('INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+        const result = await client.query('INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
             [
                 this.title,
                 this.description,
@@ -152,7 +165,8 @@ class Recipe {
                 this.cook_time,
                 this.story,
                 this.picture,
-                this.user_id
+                this.user_id,
+                this.movie_id
             ]
         );
 
@@ -201,7 +215,8 @@ class Recipe {
             recipeData.cook_time,
             recipeData.story,
             recipeData.picture,
-            recipeData.user_id
+            recipeData.user_id,
+            recipeData.movie_id
         );
     }
 
@@ -219,7 +234,8 @@ class Recipe {
         story = $8,
         picture = $9,
         user_id = $10
-    WHERE id = $11
+        movie_id = $11
+    WHERE id = $12
   `, [
             this.title,
             this.description,
@@ -231,6 +247,7 @@ class Recipe {
             this.story,
             this.picture,
             this.user_id,
+            this.movie_id,
             this.id
         ]);
 

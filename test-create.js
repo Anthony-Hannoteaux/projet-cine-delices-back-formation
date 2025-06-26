@@ -1,27 +1,35 @@
 import Recipe from './src/app/models/Recipe.js';
 import client from './src/app/database.js';
+import { searchMovie } from './src/app/services/movieService.js';
 
 // test de la méthode create de la classe Recipe
 
-/*(async () => {
+(async () => {
   try {
     // On crée une instance de la classe Recipe avec les données de la recette
     // Les paramètres sont passés dans l'ordre défini par le constructeur de la classe Recipe
     // Ici, on insère une recette de crêpes Suzette
     // Les valeurs nulles sont utilisées pour les champs auto-incrémentés ou non requis
     // On utilise des valeurs fictives pour les autres champs
+    const film = await searchMovie('Interstellar');
+    console.log(film);
+    
+    const tmdbMovieId = film.id;
+
+  
     const recette = new Recipe(
       null,
-      'Crêpes Suzette',
-      'Des crêpes flambées à l’orange',
-      'Raisonnable',
-      '€',
+      'Lasagnes à la Nolan.',
+      'Inspirée par la gravité de l’espace-temps.',
+      'Difficile',
+      '€€',
       4,
-      10,
-      5,
-      'Un classique de la cuisine française',
-      'crepes.jpg',
-      1
+      30,
+      45,
+      'On mange ça avant de traverser un trou blanc',
+      'lasagne.jpg',
+      1,
+      tmdbMovieId
     );
     
     // On appelle la méthode create pour insérer la recette dans la base de données
@@ -34,10 +42,10 @@ import client from './src/app/database.js';
   } finally {
     await client.end(); // Ferme la connexion proprement
   }
-})();*/
+})();
 
 // Test de la méthode findAll de la classe Recipe
-(async () => {
+/*(async () => {
   try {
     // On appelle la méthode findAll pour récupérer toutes les recettes
     const recettes = await Recipe.findAll();
@@ -53,7 +61,7 @@ import client from './src/app/database.js';
   } finally {
     await client.end(); // Ferme la connexion proprement
   }
-})();
+})();*/
 
 
 // Test de la méthode findById de la classe Recipe
