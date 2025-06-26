@@ -1,82 +1,88 @@
 // import de client depuis database
 import client from "../database.js";
 
-// classe category qui représentra un modèle pour la table category (les entrées, plats, desserts, etc)
-// à laquelle on déclare 2 propriétés (id et name)
+// classe category qui représentra un modèle pour la table category (entrées, plats, desserts, etc)
+// à laquelle on déclare une propriété privée (#) name
 class Category {
   #name;
+  #id;
 
-  // création d'instance de notre classe Catagory grâce au constructeur avec pour arguments id et name
-  constructor(name) {
-    this.name = name;
+  // création d'instance de notre classe Catagory grâce au constructeur avec pour argument name
+  constructor(id, name) {
+    this.#name = name;
+    this.#id = id;
   }
-get name() {
-  return this.#name;
-}
-set name(value) {
-  this.#name = value;
-}
+  // utilisation de getter pour récupérer la valeur de la propriété name
+  get name() {
+    return this.#name;
+  }
+  // utilisation de setter pour modifier la valeur de la propriété name
+  set name(value) {
+    // mise en place d'une condition : si la valeur n'est pas une chaine de caractères alors je renvoie une erreur
+    if (typeof value !== "string") {
+      throw new Error(`${value} n'est pas une chaîne de caractère`);
+    }
+    // si la valeur correspond bien à une chîne de caractère alors je renvoie la valeur de name
+    return (this.#name = value);
+  }
+
+  get id() {
+    return this.#id;
+  }
+  set id(value) {
+    if (typeof value !== "number") {
+      throw new Error(`${value} n'est pas un nombre`);
+    }
+    return (this.#id = value);
+  }
+
   // Méthode CRUD (Create, Read, Update, Delete)
 
-  // CREATE : méthode statique pour créer une nouvelle catégorie
-  // on donne name comme paramètre, pas besoin de l'id puisqu'il sera auto-incrémenté
-  async create(name) {
-    // execution de la requête SQL pour insérer une nouvelle ligne dans la table category
+  // static = on accède depuis la classe, on passe pas par l'instance
+
+  // CREATE : Création d'une catégorie
+  async create() {
+    // le résultat de la requête qui sera dans notre variable result
     const result = await client.query(
-      // insert la valeur de $1 dans la colonne name puis le retourne
-      // puis renvoie l'id auto-incrémenté et le nom
-      `INSERT INTO category (name) VALUES ($1) RETURNING id, name;`,
-      [name]
+      // on insert une nouvelle categorie dans la table category
+      // avec comme paramètre de sécurité $1 pour éviter les injections SQL (obligatoire)
+      `INSERT INTO category ("name") VALUES ($1);`,
+      // on assigne cette nouvelle valeur à name
+      [this.#name]
     );
     // nous renvoie un tableau d'objet qui contenant résultat
-    return result.rows[0];
+    return result.rowCount;
   }
 
-  // READ : récupération d'une catégorie via son id
-  // static async findById(id) {
-  //   const result = await client.query(`SELECT * FROM category WHERE id = $1`, [
-  //     id,
-  //   ]);
-  //   const category = result.rows[0];
-
-  //   if (!category) {
-  //     throw new Error(`La catégorie avec l'id ${id} est introuvable.`);
-  //   }
-  //   return category;
-  // }
-
+  // READ : Lecture d'une catégorie
+  // pour toutes les catégories
   static async findAll() {
     const result = await client.query(`SELECT * FROM "category";`);
-    console.log(result);
+    return result.rows;
+  }
+  // pour une catégorie spécifique via son id
+  static async findById(id) {
+    const result = await client.query(`SELECT * FROM category WHERE id = $1`, [
+      id,
+    ]);
+    return result.rows;
   }
 
   // UPDATE : mise à jour d'une catégorie
-  static async updateById(id, newName) {
+  async update() {
     const result = await client.query(
-      `UPDATE category SET name = $1 WHERE id = $2 RETURNING id, name`,
-      [id, newName]
+      `UPDATE category SET name = $1 WHERE id = $2`,
+      [this.#id]
     );
-    const updateCategory = result.rows[0];
-    if (!updateCategory) {
-      throw new Error(
-        `Impossible de mettre à jour la catégorie car l'id ${id} est introuvable`
-      );
-    }
-    return new Category(updateCategory.id, updateCategory.name);
+    return result.rows;
   }
 
   // DELETE : suppression d'une catégorie
-  static async deleteById(id) {
-    const result = await client.query(
-      `DELETE FROM category WHERE id = $1 RETURNING id`,
-      [id]
-    );
-    if (result.rowCount === 0) {
-      throw new Error(
-        `Impossible de supprimer la catégorie car l'id ${id} est introuvable.`
-      );
-    }
-    return `La catégorie avec l'id ${id} a bien été supprimée `;
+  async delete() {
+    const result = await client.query(`DELETE FROM category WHERE id = $1`, [
+      this.#id,
+    ]);
+    return result.rows;
   }
 }
 
