@@ -10,6 +10,8 @@ console.log(process.env.PGDATABASE)
 console.log(process.env.PGUSER)
 console.log(process.env.PGPASSWORD)
 
+
+// Fichier .env n'est pas lu.. à corriger avant de push !
 const client = new pg.Client({
     host: 'localhost',
     port: 5432,

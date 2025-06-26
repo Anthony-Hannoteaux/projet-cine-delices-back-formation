@@ -52,6 +52,20 @@ class User {
 
     // Mise en place du CRUD grâce au design pattern "Active Record"
 
+    // CREATE
+    create() {
+        const result = client.query(`
+            INSERT INTO "user"
+            ("username", "email", "password")
+            VALUES ($1, $2, $3);`, [
+                this.username,
+                this.email,
+                this.password
+            ])
+
+            return result.rowCount;
+    }
+    
     // READ
     static async findAll() {
         const result = await client.query(`SELECT * FROM "user"`);
@@ -68,6 +82,13 @@ const newUser = {
 
 const userTest = new User(newUser);
 
+// Premier Test d'affichage de tout les utilisateurs
+// User.findAll()
+// console.log(userTest.username, userTest.email, userTest.password)
+/**
+ * Utilisateur créer grâce à la fonction create du CRUD
+ * Mise en commentaire pour ne pas recréer le même utilisateur à chaque test
+ * Car erreur du à la duplication de clé
+ */
+// userTest.create()
 User.findAll()
-
-console.log(userTest.username, userTest.email, userTest.password)
