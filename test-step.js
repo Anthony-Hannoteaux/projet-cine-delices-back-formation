@@ -2,7 +2,7 @@ import Step from './src/app/models/Step.js';
 import client from './src/app/database.js';
 
 // test de la méthode create de la classe Step
-/*(async () => {
+(async () => {
   try {
     // On crée une instance de la classe Step avec les données de l'étape
     const step = new Step(
@@ -22,7 +22,7 @@ import client from './src/app/database.js';
   } finally {
     await client.end(); // Ferme la connexion proprement
   }
-})();*/
+})();
 
 // Test de la méthode findAll de la classe Step
 /*(async () => {

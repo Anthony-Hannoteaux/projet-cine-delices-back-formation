@@ -38,7 +38,8 @@ CREATE TABLE "recipe" (
     "cook_time" INTEGER NOT NULL,
     "story" TEXT UNIQUE,
     "picture" TEXT UNIQUE,
-    "user_id" INTEGER REFERENCES "user"("id") NOT NULL
+    "user_id" INTEGER REFERENCES "user"("id") NOT NULL,
+    "movie_id" INTEGER NOT NULL
 );
 
 CREATE TABLE "recipe_has_category" (
