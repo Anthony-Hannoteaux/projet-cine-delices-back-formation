@@ -2,6 +2,7 @@ import client from '../../app/database.js';
 
 class Recipe {
     // Attributs de la classe Recipe
+    #id;
     #title;
     #description;
     #difficulty;
@@ -31,12 +32,19 @@ class Recipe {
         this.movie_id = movie_id;
     }
 
-
     // Getters pour accéder aux attributs privés
+    get id() {
+        return this.#id;
+    }
+    // Setters pour modifier les attributs privés
+    set id(value) {
+        this.#id = value;
+    }
+
+    // Getter et setter pour accéder au titre
     get title() {
         return this.#title;
     }
-    // Setters pour modifier les attributs privés
     set title(value) {
         if (typeof value !== 'string' || value.trim() === '') {
             throw new Error('Le titre doit être une chaîne de caractères non vide.');
@@ -131,9 +139,6 @@ class Recipe {
         return this.#user_id;
     }
     set user_id(value) {
-        if (typeof value !== 'number' || value <= 0) {
-            throw new Error('L\'ID de l\'utilisateur doit être un nombre positif.');
-        }
         this.#user_id = value;
     }
 
@@ -142,9 +147,6 @@ class Recipe {
         return this.#movie_id;
     }
     set movie_id(value) {
-         if (typeof value !== 'number' || value <= 0) {
-            throw new Error('L\'ID du film doit être un nombre positif.');
-        }
         this.#movie_id = value;
     }
 
