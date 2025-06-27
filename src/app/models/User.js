@@ -49,18 +49,26 @@ class User {
         const result = await client.query(`INSERT INTO "user"
             (username, email, password)
             VALUES ($1, $2, $3)`, [
-                this.#username,
-                this.#email,
-                this.#password
-            ])
-            return result.rowCount
+            this.#username,
+            this.#email,
+            this.#password
+        ])
+        return result.rowCount
     }
-
+    // affiche l'ensemble des enregistrements de la table user
     static async findAll() {
-        const result = await client.query (`SELECT * FROM "user";`)
+        const result = await client.query(`SELECT * FROM "user";`)
         return result.rows
     }
-}
+    // affiche l'enregistrement de l'id spécifié
+    static async findById(id) {
+        const result = await client.query(`SELECT * FROM "user"
+            WHERE id = $1`, [
+            id
+        ]);
+        return result.rows;
+    }
+};
 
 const user1 = {
     username: "John Doe",
@@ -69,4 +77,4 @@ const user1 = {
 }
 const userTest = new User(user1);
 
-User.findAll()
+User.findById(4)
