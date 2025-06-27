@@ -205,7 +205,7 @@ class Recipe {
             throw new Error(`Recette avec l'ID ${id} non trouvée.`);
         }
 
-        //Retounre une instance de la classe Recipe avec les données récupérées
+        //Retourne une instance de la classe Recipe avec les données récupérées
         return new Recipe(
             recipeData.id,
             recipeData.title,
