@@ -1,4 +1,5 @@
 import validator from "validator";
+import client from "../database.js";
 // initialisation de la classe User
 class User {
     // initialisation des propriétés privées
@@ -8,7 +9,7 @@ class User {
 
     constructor(config) {
         this.username = config.username;
-        this.email = config.username;
+        this.email = config.email;
         this.password = config.password;
     }
     // mise en place des getteurs
@@ -42,13 +43,25 @@ class User {
     set password(value) {
         this.#password = value;
     }
+
+    // mise en place du CRUD via le design pattern active record
+    async create() {
+        const result = await client.query(`INSERT INTO "user"
+            (username, email, password)
+            VALUES ($1, $2, $3)`, [
+                this.#username,
+                this.#email,
+                this.#password
+            ])
+            return result.rowCount
+    }
 }
 
 const user1 = {
     username: "John Doe",
-    email: "johndoeemail.com",
+    email: "johndoe@mail.com",
     password: "password"
 }
 const userTest = new User(user1);
 
-// console.log(user1.email);
+userTest.create()
