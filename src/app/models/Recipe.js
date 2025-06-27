@@ -135,7 +135,6 @@ class Recipe {
         this.#user_id = value;
     }
 
-
     // Ajout d'une recette dans la base de données
     // Méthode asynchrone pour créer une recette
     // Utilisation de la méthode db.query pour insérer les données dans la table "recipes"
@@ -189,7 +188,7 @@ class Recipe {
             throw new Error(`Recette avec l'ID ${id} non trouvée.`);
         }
 
-        //Retounre une instance de la classe Recipe avec les données récupérées
+        //Retourne une instance de la classe Recipe avec les données récupérées
         return new Recipe(
             recipeData.id,
             recipeData.title,
