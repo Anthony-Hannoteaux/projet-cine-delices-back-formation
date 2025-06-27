@@ -1,6 +1,6 @@
 // création du client de connexion à postgreSQL
 import pg from "pg";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 
 // on charge notre fichier .env
 dotenv.config();

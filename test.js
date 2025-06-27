@@ -1,22 +1,34 @@
 import Category from "./src/app/models/Category.js";
-
-const categoryTest = new Category("you");
-console.log(categoryTest.name);
-
-categoryTest.name = "youssef";
-console.log(categoryTest.name);
-
-Category.findAll();
-
-Category.findById(1);
+import client from "./src/app/database.js";
 
 // TEST //
 
-// CREATE 
+// ok
+const categoryTest = new Category(15, "lea");
 
-// READ 
+// -> renvoie youssef / 1
+console.log(categoryTest.id, categoryTest.name);
 
-// UPDATE 
+// -> Category {}
+console.log(categoryTest);
 
-// DELETE 
+// ok -> renvoie jul
+categoryTest.name = "jul";
+console.log(categoryTest.name);
 
+// CREATE
+categoryTest.create();
+console.log(categoryTest.name);
+
+// READ
+Category.findAll();
+console.log(categoryTest);
+
+// UPDATE
+const test = await Category.findById(10);
+console.log(test);
+
+// DELETE
+categoryTest.id = "qSarah";
+categoryTest.update();
+// console.log(categoryTest.name);
