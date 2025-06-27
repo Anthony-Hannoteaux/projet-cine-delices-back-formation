@@ -55,6 +55,11 @@ class User {
             ])
             return result.rowCount
     }
+
+    static async findAll() {
+        const result = await client.query (`SELECT * FROM "user";`)
+        return result.rows
+    }
 }
 
 const user1 = {
@@ -64,4 +69,4 @@ const user1 = {
 }
 const userTest = new User(user1);
 
-userTest.create()
+User.findAll()
