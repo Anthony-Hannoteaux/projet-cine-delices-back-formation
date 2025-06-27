@@ -6,11 +6,14 @@ class User {
     #username;
     #email;
     #password;
+    #id;
 
     constructor(config) {
         this.username = config.username;
         this.email = config.email;
         this.password = config.password;
+        this.id = config.id;
+
     }
     // mise en place des getteurs
     get username() {
@@ -23,6 +26,10 @@ class User {
 
     get password() {
         return this.#password;
+    }
+
+    get id() {
+        return this.#id;
     }
 
     // mise en place des setteurs (mutateurs)
@@ -42,6 +49,9 @@ class User {
 
     set password(value) {
         this.#password = value;
+    }
+    set id(value) {
+        this.#id = value;
     }
 
     // mise en place du CRUD via le design pattern active record
@@ -68,6 +78,22 @@ class User {
         ]);
         return result.rows;
     }
+
+    // modification
+    async update() {
+        const result = await client.query(`UPDATE "user"
+            SET
+            "username" = $1,
+            "email" = $2,
+            "password" = $3
+            WHERE "id"= $4`, [
+            this.#username,
+            this.#email,
+            this.#password,
+            this.#id
+        ])
+        return result.rowCount;
+    }
 };
 
 const user1 = {
@@ -75,6 +101,14 @@ const user1 = {
     email: "johndoe@mail.com",
     password: "password"
 }
-const userTest = new User(user1);
 
-User.findById(4)
+const thisUser = await User.findById(4)
+// console.log(thisUser)
+// console.log(thisUser[0])
+const updateUser = new User (thisUser[0]);
+// console.log(updateUser.id)
+
+updateUser.username = "Anthony";
+console.log(updateUser.username);
+
+updateUser.update();
