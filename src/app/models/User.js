@@ -94,13 +94,22 @@ class User {
         ])
         return result.rowCount;
     }
+
+    // suppression
+    async delete() {
+        const result = await client.query(`DELETE FROM "user"
+            WHERE "id" = $1`, [
+                this.#id
+            ])
+            return result.rowCount;
+    }
 };
 
-const user1 = {
-    username: "John Doe",
-    email: "johndoe@mail.com",
-    password: "password"
-}
+// const user1 = {
+//     username: "John Doe",
+//     email: "johndoe@mail.com",
+//     password: "password"
+// }
 
 const thisUser = await User.findById(4)
 // console.log(thisUser)
@@ -108,7 +117,7 @@ const thisUser = await User.findById(4)
 const updateUser = new User (thisUser[0]);
 // console.log(updateUser.id)
 
-updateUser.username = "Anthony";
-console.log(updateUser.username);
+// updateUser.username = "Anthony";
+// console.log(updateUser.username);
 
-updateUser.update();
+updateUser.delete();
