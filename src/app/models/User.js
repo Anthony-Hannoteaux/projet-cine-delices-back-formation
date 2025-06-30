@@ -95,7 +95,7 @@ class User {
         return result.rowCount;
     }
 
-    // suppression
+    // suppression d'un enregistrement à partir de l'id
     async delete() {
         const result = await client.query(`DELETE FROM "user"
             WHERE "id" = $1`, [
@@ -111,7 +111,7 @@ class User {
 //     password: "password"
 // }
 
-const thisUser = await User.findById(4)
+const thisUser = await User.findById(3)
 // console.log(thisUser)
 // console.log(thisUser[0])
 const updateUser = new User (thisUser[0]);
@@ -120,4 +120,6 @@ const updateUser = new User (thisUser[0]);
 // updateUser.username = "Anthony";
 // console.log(updateUser.username);
 
-updateUser.delete();
+// updateUser.delete();
+
+export default User;
