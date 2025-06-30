@@ -23,12 +23,12 @@ CREATE TABLE "user" (
 );
 
 CREATE TABLE "genre" (
-    "id" INTEGER PRIMARY KEY, -- auto-généré
+    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- auto-généré
     "name" VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE "movie" (
-    "id" INTEGER PRIMARY KEY, -- auto-généré
+    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- auto-généré
     "title" VARCHAR(255) NOT NULL,
     "overview" TEXT,
     "poster_path" TEXT,
