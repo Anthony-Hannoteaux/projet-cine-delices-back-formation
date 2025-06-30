@@ -7,7 +7,7 @@ BEGIN;
 -- Instruction permettant la rejouabilité
 -- Si les tables existes alors elles seront supprimé
 -- Le mot clé CASCADE permet de supprimer aussi les objets dépendants à ces tables
-DROP TABLE IF EXISTS "recipe", "category", "user", "step", "recipe_has_category" CASCADE;
+DROP TABLE IF EXISTS "genre", "movie", "movie_has_genre", "recipe", "category", "user", "step", "recipe_has_category" CASCADE;
 
 -- Instruction pour créer la table (ici "user")
 CREATE TABLE "user" (
@@ -20,6 +20,26 @@ CREATE TABLE "user" (
     "email" VARCHAR(32) UNIQUE NOT NULL,
     -- Utilisation d'un type TEXT pour ne pas limiter le nombre de caractère enregistré pour cette colonne
     "password" TEXT NOT NULL
+);
+
+CREATE TABLE "genre" (
+    "id" INTEGER PRIMARY KEY, -- auto-généré
+    "name" VARCHAR(64) NOT NULL
+);
+
+CREATE TABLE "movie" (
+    "id" INTEGER PRIMARY KEY, -- auto-généré
+    "title" VARCHAR(255) NOT NULL,
+    "overview" TEXT,
+    "poster_path" TEXT,
+    "media_type" VARCHAR(10) NOT NULL,
+    "TMDB_id" INTEGER UNIQUE NOT NULL -- TMDB ID
+);
+
+CREATE TABLE "movie_has_genre" (
+    "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE,
+    "genre_id" INTEGER REFERENCES "genre"("id")
 );
 
 CREATE TABLE "category" (
@@ -38,8 +58,8 @@ CREATE TABLE "recipe" (
     "cook_time" INTEGER NOT NULL,
     "story" TEXT UNIQUE,
     "picture" TEXT UNIQUE,
-    "user_id" INTEGER REFERENCES "user"("id") ON DELETE CASCADE,
-    "movie_id" INTEGER NOT NULL
+    "user_id" INTEGER REFERENCES "user"("id") NOT NULL,
+    "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "recipe_has_category" (
