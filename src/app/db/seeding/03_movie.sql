@@ -1,7 +1,7 @@
 BEGIN;
 
 
-INSERT INTO "movie"("tmdb_id", "title", "overview", "poster_path", "media_type") VALUES
+INSERT INTO "movie"("TMDB_id", "title", "overview", "poster_path", "media_type") VALUES
 (
     574475,
     'Final Destination Bloodlines',
