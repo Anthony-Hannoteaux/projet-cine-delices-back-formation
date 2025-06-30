@@ -1,7 +1,6 @@
-import fetch from 'node-fetch';
 
 //Déclaration d’une fonction asynchrone exportée. Elle prend deux paramètres avec valeurs par défaut
-export async function fetchCatalogue(type = 'movie', page = 1) {
+export default async function fetchCatalogue(type = 'movie', page = 1) {
   const API_KEY = process.env.TMDB_API_KEY;
 
   //En fonction du type (tv ou movie), on choisit l’endpoint TMDb correspondant
