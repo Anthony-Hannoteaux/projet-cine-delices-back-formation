@@ -1,14 +1,13 @@
-// création du client de connexion à postgreSQL
 import pg from "pg";
-import * as dotenv from "dotenv";
+// import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
-// on charge notre fichier .env
 dotenv.config();
 
-// on crée un client depuis l'objet pg et sa classe Client
+
+// Fichier .env n'est pas lu.. à corriger avant de push !
 const client = new pg.Client();
 
-// on se connecte à postegreSQL
 client.connect();
 
 export default client;
