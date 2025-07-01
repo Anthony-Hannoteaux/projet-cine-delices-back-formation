@@ -1,58 +1,79 @@
-import validator from "validator";
 import client from "../database.js";
-// initialisation de la classe User
-class User {
+
+// initialisation de la classe Movie
+class Movie {
     // initialisation des propriétés privées
-    #username;
-    #email;
-    #password;
     #id;
+    #TMDB_id;
+    #title;
+    #overview;
+    #poster_path;
+    #media_type;
 
     constructor(config) {
-        this.username = config.username;
-        this.email = config.email;
-        this.password = config.password;
         this.id = config.id;
-
+        this.TMDB_id = config.TMDB_id;
+        this.title = config.title;
+        this.overview = config.overview;
+        this.poster_path = config.poster_path;
+        this.media_type = config.media_type;
     }
+
     // mise en place des getters
-    get username() {
-        return this.#username;
-    }
-
-    get email() {
-        return this.#email;
-    }
-
-    get password() {
-        return this.#password;
-    }
-
     get id() {
         return this.#id;
     }
+    get TMDB_id() {
+        return this.#TMDB_id;
+    }
+
+    get title() {
+        return this.#title;
+    }
+
+    get overview() {
+        return this.#overview;
+    }
+
+    get poster_path() {
+        return this.#poster_path;
+    }
+
+    get media_type() {
+        return this.#media_type;
+    }
 
     // mise en place des setteurs (mutateurs)
-    set username(value) {
-        if (value.length > 32 || value.length < 1) {
-            throw new Error("Votre nom d'utilisateur doit contenir entre 1 et 32 caractères");
-        }
-        this.#username = value;
-    }
-
-    set email(value) {
-        if (!validator.isEmail(value)) {
-            throw new Error("Le format d'email n'est pas valide");
-        }
-        this.#email = value;
-    }
-
-    set password(value) {
-        this.#password = value;
-    }
     set id(value) {
         this.#id = value;
     }
+
+    set TMDB_id(value) {
+        if(value === Movie.TMDB_id) {
+            throw new Error ("Ce film existe déjà")
+        }
+        this.#TMDB_id = value;
+    }
+
+    set title(value) {
+        this.#title = value;
+    }
+
+    set overview(value) {
+        this.#overview = value;
+    }
+
+    set poster_path(value) {
+        this.#poster_path = value;
+    }
+
+    set media_type(value) {
+        if (value === !"movie" && value === !"tv") {
+            throw new Error ("Le media doit être de type 'movie' ou 'tv'")
+        }
+        this.#media_type = value;
+    }
+
 
     // mise en place du CRUD via le design pattern active record
     async create() {
