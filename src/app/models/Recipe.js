@@ -235,7 +235,7 @@ class Recipe {
         cook_time = $7,
         story = $8,
         picture = $9,
-        user_id = $10
+        user_id = $10,
         movie_id = $11
     WHERE id = $12
   `, [
