@@ -66,9 +66,9 @@ class Movie {
     }
 
     set media_type(value) {
-        // if (value != "movie" && value != "tv") {
-        //     throw new Error("Le media doit être de type 'movie' ou 'tv'")
-        // }
+        if (value != "movie" && value != "tv") {
+            throw new Error("Le media doit être de type 'movie' ou 'tv'")
+        }
         this.#media_type = value;
     }
 
