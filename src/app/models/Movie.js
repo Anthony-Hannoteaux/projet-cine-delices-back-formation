@@ -138,4 +138,4 @@ class Movie {
     }
 }
 
-export default Movie;;
+export default Movie;
