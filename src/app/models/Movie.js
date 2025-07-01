@@ -136,4 +136,6 @@ class Movie {
         // retourne le nombre d'enregistrements supprimés
         return result.rowCount;
     }
-};
+}
+
+export default Movie;;
