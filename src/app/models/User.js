@@ -34,8 +34,8 @@ class User {
 
     // mise en place des setteurs (mutateurs)
     set username(value) {
-        if (value.length > 32 || value.length < 1) {
-            throw new Error("Votre nom d'utilisateur doit contenir entre 1 et 32 caractères");
+        if (typeof value !== "string" && (value.length > 32 || value.length < 1)) {
+            throw new Error("Votre nom d'utilisateur doit obligatoirement être une chaîne de caractère entre 1 et 32.");
         }
         this.#username = value;
     }
@@ -77,7 +77,7 @@ class User {
             WHERE id = $1`, [
             id
         ]);
-        return result.rows;
+        return result.rows[0];
     }
 
     // modification

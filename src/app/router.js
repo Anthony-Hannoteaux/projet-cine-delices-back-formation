@@ -10,10 +10,15 @@ const router = express.Router();
 router.get("/", mainController.home);
 
 // Routes API pour la gestion du CRUD du modèle User
+// Routes GET
 router.get("/api/users", authController.getAllUser);
 router.get("/api/users/:id", authController.getUserById);
 
+// Route POST
 router.post("/api/users/", authController.createNewUser);
+
+// Route PATCH
+router.patch("/api/users/:id", authController.updateUser);
 
 router.get("/catalogue", apiController.catalogue);
 
