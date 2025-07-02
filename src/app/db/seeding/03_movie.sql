@@ -30,5 +30,5 @@ INSERT INTO "movie"("TMDB_id", "title", "overview", "poster_path", "media_type")
     'https://image.tmdb.org/t/p/w500/q5pXRYTycaeW6dEgsCrd4mYPmxM.jpg',
     'movie'
   );
-  
+
   COMMIT;
