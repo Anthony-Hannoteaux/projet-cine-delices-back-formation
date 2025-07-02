@@ -83,8 +83,10 @@ updateRecipe: async (req, res) => {
 
     // Sauvegarde en BDD via la méthode d’instance `update()`
     const updated = await recipe.update();
+    // Recharge la recette fraîchement mise à jour
+    const refreshedRecipe = await Recipe.findById(recipe.id);
     // Renvoi des recettes au format JSON
-    res.status(200).json({ message: 'Recette mise à jour', modified: updated });
+    res.status(200).json({ message: 'Recette mise à jour', modified: updated, data: refreshedRecipe });
     // Gestion d'erreur
   } catch (error) {
     console.error('updateRecipe:', error);

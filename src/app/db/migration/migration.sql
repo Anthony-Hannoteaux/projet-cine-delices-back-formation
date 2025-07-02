@@ -50,14 +50,14 @@ CREATE TABLE "category" (
 CREATE TABLE "recipe" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "title" VARCHAR(32) NOT NULL,
-    "description" VARCHAR(255) NOT NULL,
+    "description" VARCHAR(255) UNIQUE NOT NULL,
     "difficulty" VARCHAR(32) NOT NULL,
     "budget" VARCHAR(32) NOT NULL,
     "servings" INTEGER NOT NULL,
     "preparation_time" INTEGER NOT NULL,
     "cook_time" INTEGER NOT NULL,
-    "story" TEXT,
-    "picture" TEXT,
+    "story" TEXT UNIQUE,
+    "picture" TEXT UNIQUE,
     "user_id" INTEGER REFERENCES "user"("id") NOT NULL,
     "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE
 );
