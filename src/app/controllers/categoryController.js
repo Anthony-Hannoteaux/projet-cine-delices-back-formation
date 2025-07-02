@@ -5,18 +5,21 @@ const categoryController = {
   // utilisation d'une fonction avec une méthode asynchrone pour créer une catégorie
   createCategory: async (req, res) => {
     try {
+      console.log("Test de requête POST REQ.BODY :", req.body);
       // on récupère l'id de notre requête
       const data = req.body;
-      // on créé une nouvelle instance de Category
-    //   const newCategory = new Category(data.id, data.name);
+      console.log("Test de la requête POST :", data);
+      // on créé une nouvelle instance de Category car ce n'est pas une méthode statique
+      // appliquable pour la méthode create, update et delete 
+      // passe null en argument au lieu de data.id car auto-incrémenté, plus de message d'erreur pour l'id mais le name maintenant
+      const newCategory = new Category(null, data.name);
       // on utilise la méthode create pour créer une nouvelle catégorie
-    //   const result = await newCategory.create();
-    //   // renvoie une réponse en json
-    //   return res.json(result);
+      const result = await newCategory.create();
+      // renvoie une réponse en json
+      return res.json(result);
       // si erreur
-    //   return (data.name, data.id);
-    console.log("name: ", data.name)
-    console.log("name: ", data.id)
+    // console.log("name: ", data.name)
+    // console.log("name: ", data.id)
     } catch (error) {
       console.log("Erreur lors de la création de la catégorie :", error);
       // alors on renvoie un status 500 avec un message d'erreur
@@ -27,10 +30,8 @@ const categoryController = {
   // utilisation d'une fonction avec une méthode asynchrone pour récupérer toutes les catégories
   getAllCategory: async (req, res) => {
     try {
-      const data = req.params;
-      const newCategory = new Category(data.id, data.name);
       // on utilise la méthode findAll pour trouver toutes les catégories
-      const result = await newCategory.findAll();
+      const result = await Category.findAll();
       // renvoie une réponse en json
       return res.json(result);
       // si erreur
@@ -43,9 +44,7 @@ const categoryController = {
 
   getCategoryById: async (req, res) => {
     try {
-      const id = req.params.id;
-      const newCategory = new Category(id);
-      const result = await newCategory.findById();
+      const result = await Category.findById();
       return res.json(result);
     } catch (error) {
       console.log("Erreur lors de la récupération de la catégorie :", error);
@@ -55,8 +54,8 @@ const categoryController = {
 
   updateCategory: async (req, res) => {
     try {
-      const id = req.params.id;
-      const newCategory = new Category(id);
+      const data = req.params;
+      const newCategory = new Category(data.id, data.name);
       const result = await newCategory.update();
       return res.json(result);
     } catch (error) {
@@ -67,8 +66,8 @@ const categoryController = {
 
   deleteCategory: async (req, res) => {
     try {
-      const id = req.params.id;
-      const newCategory = new Category(id);
+      const data = req.params;
+      const newCategory = new Category(data.id, data.name);
       const result = await newCategory.delete();
       return res.json(result);
     } catch (error) {

@@ -31,9 +31,9 @@ class Category {
     return this.#id;
   }
   set id(value) {
-    // if (typeof value !== "number") {
-    //   throw new Error(`"${value}" n'est pas un nombre`);
-    // }
+    if (typeof value !== "number") {
+      throw new Error(`"${value}" n'est pas un nombre`);
+    }
     return this.#id = value;
   }
 
