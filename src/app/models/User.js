@@ -105,21 +105,4 @@ class User {
     }
 };
 
-// const user1 = {
-//     username: "John Doe",
-//     email: "johndoe@mail.com",
-//     password: "password"
-// }
-
-const thisUser = await User.findById(3)
-// console.log(thisUser)
-// console.log(thisUser[0])
-const updateUser = new User (thisUser[0]);
-// console.log(updateUser.id)
-
-// updateUser.username = "Anthony";
-// console.log(updateUser.username);
-
-// updateUser.delete();
-
 export default User;

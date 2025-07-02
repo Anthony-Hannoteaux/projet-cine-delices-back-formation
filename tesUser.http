@@ -1,0 +1,15 @@
+### GET all users
+GET http://localhost:3000/api/users
+
+### GET user by id
+GET http://localhost:3000/api/users/2
+
+### POST create user
+POST http://localhost:3000/api/users
+Content-Type: application/json; charset=utf-8
+
+{
+    "username": "Anthony",
+    "email": "mail@mail.com",
+    "password": "SuperMotDePasse"
+}
