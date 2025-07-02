@@ -9,9 +9,9 @@ class Category {
   
 
   // création d'instance de notre classe Catagory grâce au constructeur avec pour argument name
-  constructor(id, name) {
-    this.id = id;
-    this.name = name;
+  constructor(config) {
+    this.id = config.id;
+    this.name = config.name;
   }
   // utilisation de getter pour récupérer la valeur de la propriété name
   get name() {

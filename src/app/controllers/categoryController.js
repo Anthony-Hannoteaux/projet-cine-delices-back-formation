@@ -12,7 +12,7 @@ const categoryController = {
       // on créé une nouvelle instance de Category car ce n'est pas une méthode statique
       // appliquable pour la méthode create, update et delete 
       // passe null en argument au lieu de data.id car auto-incrémenté, plus de message d'erreur pour l'id mais le name maintenant
-      const newCategory = new Category(null, data.name);
+      const newCategory = new Category(data.id, data.name);
       // on utilise la méthode create pour créer une nouvelle catégorie
       const result = await newCategory.create();
       // renvoie une réponse en json
