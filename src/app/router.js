@@ -20,6 +20,9 @@ router.post("/api/users/", authController.createNewUser);
 // Route PATCH
 router.patch("/api/users/:id", authController.updateUser);
 
+// Route DELETE
+router.delete("/api/users/:id", authController.delete);
+
 router.get("/catalogue", apiController.catalogue);
 
 export default router;

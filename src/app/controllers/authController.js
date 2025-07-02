@@ -37,7 +37,7 @@ const authController = {
             // On commence par listé tout nos utilisateurs
             const AllUser = await User.findAll();
             // Pour tout les objet user
-            for (let index = 0 ; index <= AllUser.length - 1 ; index++) {
+            for (let index = 0; index <= AllUser.length - 1; index++) {
                 const userEmail = AllUser[index].email;
                 // Si l'email stocké en BDD correspond à celui récupéré dans le body de notre requêtes
                 if (userEmail === req.body.email) {
@@ -82,6 +82,25 @@ const authController = {
                 throw new Error('Erreur lors de la mise à jour des informations utilisateur.')
             }
             res.status(200).json("Mise à jour du profil utilisateur effectuée.")
+        } catch (error) {
+            res.status(409).json(error.message)
+        }
+    },
+
+    // Route DELETE /api/users/:id
+    delete: async (req, res) => {
+        try {
+            const id = parseInt(req.params.id);
+            const user = await User.findById(id);
+            if (user === undefined) {
+                throw new Error("Aucune correspondance pour cette ID")
+            }
+            const deletedUser = new User(user)
+            const rowCounts = await deletedUser.delete()
+            if (rowCounts === 0) {
+                throw new Error("Erreur lors de la supression de l'utilisateur.")
+            }
+            return res.status(200).json("Suppression de l'utilisateur effectuée.")
         } catch (error) {
             res.status(409).json(error.message)
         }
