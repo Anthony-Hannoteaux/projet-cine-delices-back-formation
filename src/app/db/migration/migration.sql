@@ -16,7 +16,7 @@ CREATE TABLE "user" (
     -- VARCHAR pour limiter le nombre maximum de caractère pour la valeur de cette colonne
     -- UNIQUE pour indiquer qu'elle doit être unique
     -- NOT NULL pour la contraindre à être obligatoire
-    "username" VARCHAR(32) UNIQUE NOT NULL,
+    "username" VARCHAR(32) NOT NULL, -- Retrait de la contrainte unique, deux utilisateurs peuvent avoir le même username
     "email" VARCHAR(32) UNIQUE NOT NULL,
     -- Utilisation d'un type TEXT pour ne pas limiter le nombre de caractère enregistré pour cette colonne
     "password" TEXT NOT NULL
