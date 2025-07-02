@@ -5,32 +5,30 @@ const categoryController = {
   // utilisation d'une fonction avec une méthode asynchrone pour créer une catégorie
   createCategory: async (req, res) => {
     try {
-      // console.log("Test de requête POST REQ.BODY :", req.body);
       // on récupère le corps de ma requête grâce à body
       const data = req.body;
-      // console.log("Test de la requête POST :", data);
-      // on créé une nouvelle instance de Category car ce n'est pas une méthode statique
-      // appliquable pour la méthode create, update et delete 
-      // passe null en argument au lieu de data.id car auto-incrémenté, plus de message d'erreur pour l'id mais le name maintenant
-      
-      // on check si la catégorie est déjà existante dans notre table
-      const existingCategory = await Category.findAll(data.name);
-      // si oui
-      if (existingCategory) {
-        // alors on renvoi un message d'erreur (status 409 : conflit)
+     // on récupère toutes les catégories présentent dan
+      const allCategory = await Category.findAll();
+
+      // condition pour éviter les doublons
+      // on parcourt chaque category présente dans notre table
+      for (const category of allCategory) {
+        // si le nom de la catégorie est déjà utilsé
+        if (data.name === category.name) {
+          // alors on renvoie un message d'erreur, status 409 : conflit
         return res.status(409).json('Cette catégorie existe déjà.');
       }
-      
-      // sinon on crée une nouvelle catégorie
+      }
+      // // sinon on crée une nouvelle catégorie
       const newCategory = new Category(data);
-      // on utilise la méthode create pour cela
+      // // on utilise la méthode create pour cela
       const result = await newCategory.create();
-      // renvoie une réponse en json
+      // // renvoie une réponse en json
       return res.json(result);
-      // si erreur
+      // // si erreur
     } catch (error) {
-      console.log("Erreur lors de la création de la catégorie :", error);
-      // alors on renvoie un status 500 (erreur serveur) avec un message d'erreur
+      // console.log("Erreur lors de la création de la catégorie :", error);
+      // alors on renvoie un status 500 (internal erreur servor) avec un message d'erreur
       return res.status(500).json("Impossible de créer de la catégorie.");
     }
   },
@@ -44,7 +42,7 @@ const categoryController = {
       return res.json(result);
       // si erreur
     } catch (error) {
-      console.log("Erreur lors de la récupération des catégories :", error);
+      // console.log("Erreur lors de la récupération des catégories :", error);
       // alors on renvoie un status 500 avec un message d'erreur
       return res.status(500).json("Impossible de récupérer les catégories.");
     }
@@ -52,18 +50,32 @@ const categoryController = {
 
   getCategoryById: async (req, res) => {
     try {
-      const result = await Category.findById();
+      // on récupère l'id présente dans l'url qu'on va convertir en entier avec la fonction parseInt
+      const id = parseInt(req.params.id);
+      // vérifie si l'id n'est pas un nombre valide via la fonction isNan
+      if(isNaN(id)) {
+        // si oui, alors renvoie un status 400 (bad request) avec un message d'erreur
+        return res.status(400).json("Id non valide.");
+      }
+      // on recherche la categorie via son id
+      const result = await Category.findById(id);
+      // si différent de result, donc de l'id
+      if(!result) {
+        // on renvoie un status 404 (not found) avec un message d'erreur
+        return res.status(404).json("Catégorié introuvable.");
+      }
+      // sinon on renvoie la nouvelle catégorie
       return res.json(result);
     } catch (error) {
-      console.log("Erreur lors de la récupération de la catégorie :", error);
+      // console.log("Erreur lors de la récupération de la catégorie :", error);
       return res.status(500).json("Impossible de récupérer la catégorie.");
     }
   },
 
   updateCategory: async (req, res) => {
     try {
-      const data = req.params;
-      const newCategory = new Category(data.id, data.name);
+      const data = req.body;
+      const newCategory = new Category(data.name);
       const result = await newCategory.update();
       return res.json(result);
     } catch (error) {
