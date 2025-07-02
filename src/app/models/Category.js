@@ -31,9 +31,6 @@ class Category {
     return this.#id;
   }
   set id(value) {
-    if (typeof value !== "number") {
-      throw new Error(`"${value}" n'est pas un nombre`);
-    }
     return this.#id = value;
   }
 
@@ -47,7 +44,7 @@ class Category {
     const result = await client.query(
       // on insert une nouvelle categorie dans la table category
       // avec comme paramètre de sécurité $1 pour éviter les injections SQL (obligatoire)
-      `INSERT INTO category (name) VALUES ($1);`,
+      `INSERT INTO category ("name") VALUES ($1);`,
       // on assigne cette nouvelle valeur à name
       [this.#name]
     );
