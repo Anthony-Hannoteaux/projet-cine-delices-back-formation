@@ -7,22 +7,28 @@ const authController = {
             const result = await User.findAll();
             return res.status(200).json(result)
         } catch (error) {
-            return res.status(500).json({ error: "Internal server error" })
+            return res.status(500).json({ error: "Erreur interne du serveur." })
         }
     },
 
     getUserById: async (req, res) => {
+        try {
             const id = parseInt(req.params.id);
-            const result = await User.findById(id)
-            // Au choix on récupère le tableau d'objet de notre réponse
+            const result = await User.findById(id);
+            // Si aucune correspondance, renvoie un tableau vide car pas d'utilisateur pour cet ID
+            if (result.length === 0) {
+                throw new Error('Aucune correspondance pour cette ID')
+            }
             return res.status(200).json(result)
-            // Ou l'objet directement
-            // return res.status(200).json(result[0])
-
+        } catch (error) {
+            res.status(404).json(error.message)
+        }
     },
 
     createNewUser: async (req, res) => {
-        console.log(req.body)
+        const data = req.body
+        const newUser = new User(data)
+        return newUser.create()
     }
 }
 

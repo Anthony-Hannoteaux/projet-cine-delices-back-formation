@@ -50,6 +50,7 @@ class User {
     set password(value) {
         this.#password = value;
     }
+    
     set id(value) {
         this.#id = value;
     }
