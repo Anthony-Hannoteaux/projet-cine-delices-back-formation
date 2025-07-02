@@ -15,7 +15,7 @@ class User {
         this.id = config.id;
 
     }
-    // mise en place des getteurs
+    // mise en place des getters
     get username() {
         return this.#username;
     }
@@ -100,9 +100,9 @@ class User {
     async delete() {
         const result = await client.query(`DELETE FROM "user"
             WHERE "id" = $1`, [
-                this.#id
-            ])
-            return result.rowCount;
+            this.#id
+        ])
+        return result.rowCount;
     }
 };
 

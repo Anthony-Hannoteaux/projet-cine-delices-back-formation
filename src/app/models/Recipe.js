@@ -193,9 +193,10 @@ class Recipe {
     // .query pour sélectionner les données de la table "recipes"
     // Le paramètre de la requête est passé sous forme de tableau
     static async findById(id) {
-        const result = await client.query(`SELECT * FROM recipe
-            JOIN "user" ON "recipe"."user_id" = "user"."id"
-            WHERE "recipe"."id" = $1`, [id]);
+        const result = await client.query(`SELECT recipe.*, "user".username, "user".email, "user".password
+        FROM recipe
+        JOIN "user" ON recipe.user_id = "user".id
+        WHERE recipe.id = $1`, [id]);
 
         // Vérifie si une recette a été trouvée
         const recipeData = result.rows[0];
@@ -235,7 +236,7 @@ class Recipe {
         cook_time = $7,
         story = $8,
         picture = $9,
-        user_id = $10
+        user_id = $10,
         movie_id = $11
     WHERE id = $12
   `, [
