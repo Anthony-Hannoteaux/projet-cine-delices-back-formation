@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/categories HTTP/1.1
 
 ### GET category by id
-GET http://localhost:3000/api/categories/:id HTTP/1.1
+GET http://localhost:3000/api/categories/2 HTTP/1.1
 
 ### POST category
 POST http://localhost:3000/api/categories HTTP/1.1
