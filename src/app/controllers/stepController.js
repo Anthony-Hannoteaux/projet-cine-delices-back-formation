@@ -21,7 +21,7 @@ const stepController = {
                 return res.status(400).json("Échec de la création de l'étape.")
             }
             // si tout est ok, renvoie l'étape avec un message 
-            return res.json({message: " Étape créée avec succès !", result});
+            return res.json({ message: " Étape créée avec succès !", result });
         } catch (error) {
             // console.log("Erreur lors de la création de l'étape :", error);
             // alors on renvoie un status 500 (internal erreur servor) avec un message d'erreur
@@ -79,7 +79,7 @@ const stepController = {
                 return res.status(400).json("Tous les champs sont obligatoies.");
             }
             // instanciation de Step avec les données à mettre à jour
-            const newStep = new Step({ id, number, description, recipe });
+            const newStep = new Step(id, number, description, recipe);
             // execution de la mise à jour avec la méthode update
             const result = await newStep.update();
             // si aucune modification
@@ -104,7 +104,7 @@ const stepController = {
                 return res.status(400).json("l'id n'est pas valide.");
             }
             // instanciation de Step via l'id uniquement
-            const newStep = new Step({ id });
+            const newStep = new Step(id);
             // execution de la méthode delete pour supprimer l'étape
             const result = await newStep.delete();
             // si aucune suppression de l'étape
@@ -115,7 +115,7 @@ const stepController = {
             // sinon renvoie le resultat après suppression effectuée
             return res.json(result);
         } catch (error) {
-            // console.log("Erreur lors de la suppression de l'étape :", error);
+            console.log("Erreur lors de la suppression de l'étape :", error);
             return res.status(500).json("Impossible de supprimer la catégorie.");
         }
     },
