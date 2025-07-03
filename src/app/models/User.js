@@ -80,6 +80,15 @@ class User {
         return result.rows[0];
     }
 
+    // affiche l'enregistrement de l'email spécifié
+    static async findByEmail(email) {
+        const result = await client.query(`SELECT * FROM "user"
+            WHERE email = $1`, [
+            email
+        ]);
+        return result.rows[0];
+    }
+
     // modification
     async update() {
         const result = await client.query(`UPDATE "user"

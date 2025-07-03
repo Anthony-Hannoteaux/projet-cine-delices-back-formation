@@ -3,7 +3,11 @@ GET http://localhost:3000/api/users
 Content-Type: application/json; charset=utf-8
 
 ### GET user by id
-GET http://localhost:3000/api/users/6
+GET http://localhost:3000/api/users/id/5
+Content-Type: application/json; charset=utf-8
+
+### GET user by email
+GET http://localhost:3000/api/users/email/toto@mail.com
 Content-Type: application/json; charset=utf-8
 
 ### POST create user
