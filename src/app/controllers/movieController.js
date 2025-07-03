@@ -3,7 +3,7 @@ import Movie from "../models/Movie.js";
 const movieController = {
 
     // ajout d'un film
-    createMovie: async(req.res) => {
+    createMovie: async (req, res) => {
     // bloc try, premier composant de la structure de gestion des erreurs, contient le code à éxécuter tout en surveillant les erreurs potentielles
     try {
         // récupération des propriétés attendues depuis le corps de la requête
@@ -13,7 +13,7 @@ const movieController = {
         // création d'une nouvelle instance de Movie avec les données reçues
         const movieToAdd = new Movie(
             TMDB_id, title, overview, poster_path, media_type
-        );
+        )
 
         // appel de la méthode d'instance create() pour l'insertion dans la BDD
         const result = await movieToAdd.create();
@@ -28,7 +28,7 @@ const movieController = {
 },
 
 // lecture de tous les enregistrements de la table "movie"
-getAllMovies: async (req, res) => {
+    getAllMovies: async (req, res) => {
     try {
         // appel à la méthode statique findAll() de la classe Movie
         const allMovies = await Movie.findAll();
@@ -39,6 +39,20 @@ getAllMovies: async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la récupération de tous les films" })
     }
 },
-} 
-  
+
+    // récupération d'un film à partir de l'id
+    getOneMovie: async (req, res) => {
+        try {
+            const movieId = req.params.id;
+            const movieById = await Movie.findById(movieId);
+            res.status(200).json(movieById);
+        }
+        catch (error) {
+            res.status(404).json({ error: "L'id spécifié n'existe pas" })
+        }
+    }
+
+
+};
+
 export default movieController;
