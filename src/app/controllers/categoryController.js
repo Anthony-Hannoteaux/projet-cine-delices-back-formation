@@ -7,7 +7,7 @@ const categoryController = {
     try {
       // on récupère le corps de ma requête grâce à body
       const data = req.body;
-     // on récupère toutes les catégories présentent dan
+      // on récupère toutes les catégories présentent dan
       const allCategory = await Category.findAll();
 
       // condition pour éviter les doublons
@@ -16,8 +16,8 @@ const categoryController = {
         // si le nom de la catégorie est déjà utilsé
         if (data.name === category.name) {
           // alors on renvoie un message d'erreur, status 409 : conflit
-        return res.status(409).json('Cette catégorie existe déjà.');
-      }
+          return res.status(409).json('Cette catégorie existe déjà.');
+        }
       }
       // // sinon on crée une nouvelle catégorie
       const newCategory = new Category(data);
@@ -52,15 +52,15 @@ const categoryController = {
     try {
       // on récupère l'id présente dans l'url qu'on va convertir en entier avec la fonction parseInt
       const id = parseInt(req.params.id);
-      // vérifie si l'id n'est pas un nombre valide via la fonction isNan
-      if(isNaN(id)) {
+      // vérifie que l'id est un nombre valide via la fonction isNan
+      if (isNaN(id)) {
         // si oui, alors renvoie un status 400 (bad request) avec un message d'erreur
         return res.status(400).json("Id non valide.");
       }
       // on recherche la categorie via son id
       const result = await Category.findById(id);
       // si différent de result, donc de l'id
-      if(!result) {
+      if (!result) {
         // on renvoie un status 404 (not found) avec un message d'erreur
         return res.status(404).json("Catégorié introuvable.");
       }
@@ -74,21 +74,44 @@ const categoryController = {
 
   updateCategory: async (req, res) => {
     try {
-      const data = req.body;
-      const newCategory = new Category(data.name);
+      // on récupère l'id présente dans l'url qu'on va convertir en entier avec la fonction parseInt
+      const id = parseInt(req.params.id);
+      const name = req.body.name;
+      // console.log("Nom récupéré :", name);
+      // si id n'est pas un numbre ou que name est vide
+      if (!id || !name) {
+        //renvoie une erreur
+        return res.status(400).json("L'id et le nom sont obligatoires.");
+      }
+      const newCategory = new Category({ id, name });
       const result = await newCategory.update();
+      // si pas de catégorie mis à jour
+      if (!result) {
+        // on renvoie une erreur
+        return res.status(404).json("Catégorie non trouvée.");
+      }
       return res.json(result);
     } catch (error) {
-      console.log("Erreur lors de la mise à jour de la catégorie :", error);
+      // console.log("Erreur lors de la mise à jour de la catégorie :", error);
       return res.status(500).json("Impossible de mettre à jour la catégorie.");
     }
   },
 
   deleteCategory: async (req, res) => {
     try {
-      const data = req.params;
-      const newCategory = new Category(data.id, data.name);
+      // on récupère l'id présente dans l'url qu'on va convertir en entier avec la fonction parseInt
+      const id = parseInt(req.params.id);
+      // vérifie que l'id est un nombre valide via la fonction isNan, si c'est pas le cas
+      if (isNaN(id)) {
+        // renvoie une erreur
+        return res.status(400).json("l'id n'est pas valide.");
+      }
+      const newCategory = new Category({ id });
       const result = await newCategory.delete();
+      // si result = 0, c'est qu'aucune categorie n'a été supprimée
+      if (result === 0) {
+        return res.status(404).json("La catégorie est introuvable.")
+      }
       return res.json(result);
     } catch (error) {
       console.log("Erreur lors de la suppression de la catégorie :", error);

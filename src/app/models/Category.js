@@ -6,12 +6,16 @@ import client from "../database.js";
 class Category {
   #id;
   #name;
-  
+
 
   // création d'instance de notre classe Catagory grâce au constructeur avec pour argument name
   constructor(config) {
     this.id = config.id;
-    this.name = config.name;
+    // on vérifie que la propriété name est différente de undefined pour éviter les erreurs
+    // pour nous permettre de ne pas appeler le setter avec une valeur undefined
+    if (config.name !== undefined) {
+      this.name = config.name;
+    }
   }
   // utilisation de getter pour récupérer la valeur de la propriété name
   get name() {
@@ -81,7 +85,7 @@ class Category {
     const result = await client.query(`DELETE FROM category WHERE id = $1`, [
       this.#id,
     ]);
-    return result.rows;
+    return result.rowCount;
   }
 }
 
