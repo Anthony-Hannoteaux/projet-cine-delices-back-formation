@@ -1,0 +1,33 @@
+###READ recipe
+GET  http://localhost:3000/api/recipes/3
+Content-Type: application/json; charset=utf-8
+
+
+###POST recipe
+POST http://localhost:3000/api/recipes
+Content-Type: application/json; charset=utf-8
+
+{
+    "title": "Croquette à Gravité Négative",
+    "description": "Un plat croustillant inspiré de la gravité interdimensionnelle",
+    "difficulty": "Facile",
+    "budget": "€",
+    "servings": 4,
+    "preparation_time": 15,
+    "cook_time": 25,
+    "story": "Recette élaborée après avoir revu Interstellar trop de fois",
+    "picture": "croquettes.jpg",
+    "user_id": 1,
+    "movie_id": 2
+}
+
+
+###PATCH recipe
+PATCH http://localhost:3000/api/recipes/4
+Content-Type: application/json; charset=utf-8
+
+{
+    "title": "Salade verte",
+    "story": "Nouvelle story incroyable",
+    "description": "Une description aux petits oignons"
+}
