@@ -2,6 +2,7 @@ import express from "express";
 import mainController from "./controllers/mainController.js";
 import apiController from "./controllers/apiController.js";
 import recipeController from "./controllers/recipeController.js";
+import stepController from "./controllers/stepController.js";
 
 // Création de notre routeur express
 const router = express.Router();
@@ -33,7 +34,7 @@ router.delete('/api/recipes/:id', recipeController.deleteRecipe);
 // routes pour les étapes
 router.post('/api/steps', stepController.createStep);
 router.get('/api/steps', stepController.getAllSteps);
-router.get('/api/steps/:id', stepController.getStep);
+router.get('/api/steps/:id', stepController.getStepById);
 router.patch('/api/steps/:id', stepController.updateStep);
 router.delete('/api/steps/:id', stepController.deleteStep);
 

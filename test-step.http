@@ -1,0 +1,28 @@
+### GET all Steps
+GET http://localhost:3000/api/steps HTTP/1.1
+
+### GET Step by id
+GET http://localhost:3000/api/steps/2 HTTP/1.1
+
+### POST Step
+POST http://localhost:3000/api/steps HTTP/1.1
+Content-Type: application/json; charset=utf-8
+
+{
+    "number": "1",
+    "description": "Mettre au four à 180 pendant 20 minutes",
+    "recipe": "cookies"
+}
+
+### PATCH Step
+PATCH http://localhost:3000/api/steps/29 HTTP/1.1
+Content-Type: application/json; charset=utf-8
+
+{
+    "number": "1",
+    "description": "Mélanger les ingrédients.",
+    "recipe": {"id": 1}
+}
+
+### DELETE Step
+DELETE http://localhost:3000/api/steps/26 HTTP/1.1
