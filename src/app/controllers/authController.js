@@ -58,10 +58,12 @@ const authController = {
             }
             // Si mot de passe valide on le hache
             const hash = await bcrypt.hash(req.body.password, 10);
-            // On s'assure de récupérer un mot de passe haché
-            console.log(hash)
-            // const newUser = new User(req.body)
-            // await newUser.create()
+            const newUser = new User({
+                username: req.body.username,
+                password: hash,
+                email: req.body.email
+            })
+            await newUser.create()
             return res.status(200).json("Nouvel utilisateur enregistré avec succès")
         }
         catch (error) {
