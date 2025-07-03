@@ -30,4 +30,11 @@ router.patch('/api/recipes/:id', recipeController.updateRecipe);
 // Supprimer une recette par ID
 router.delete('/api/recipes/:id', recipeController.deleteRecipe);
 
+// routes pour les étapes
+router.post('/api/steps', stepController.createStep);
+router.get('/api/steps', stepController.getAllSteps);
+router.get('/api/steps/:id', stepController.getStep);
+router.patch('/api/steps/:id', stepController.updateStep);
+router.delete('/api/steps/:id', stepController.deleteStep);
+
 export default router;
