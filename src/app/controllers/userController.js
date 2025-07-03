@@ -19,11 +19,11 @@ const userController = {
             const email = req.params.email;
             const result = await User.findByEmail(email);
             if (!result) {
-                throw new Error('Aucune correspondance pour cette Email')
+                return res.status(404).json({ message: 'Aucune correspondance pour cette Email' })
             }
             return res.status(200).json(result)
         } catch (error) {
-            res.status(404).json(error.message)
+            return res.status(500).json({ message: 'Erreur serveur' })
         }
     },
 
@@ -34,30 +34,21 @@ const userController = {
             const result = await User.findById(id);
             // Gestion d'erreur si result est false (donc pas d'utilisateur à cet ID)
             if (!result) {
-                throw new Error('Aucune correspondance pour cette ID')
+                return res.status(404).json({ message: 'Aucune correspondance pour cette ID' })
             }
             return res.status(200).json(result)
         } catch (error) {
-            res.status(404).json(error.message)
+            return res.status(500).json({ message: 'Erreur serveur' })
         }
     },
 
     // Route POST /api/users
     createNewUser: async (req, res) => {
         try {
-            /**
-             * Nous souhaitons vérifié si une correspondance existe entre l'email récupéré
-             * Et ceux stocké dans notre BDD
-             */
-            // On commence par listé tout nos utilisateurs
-            const AllUser = await User.findAll();
-            // Pour tout les objet user
-            for (let index = 0; index <= AllUser.length - 1; index++) {
-                const userEmail = AllUser[index].email;
-                // Si l'email stocké en BDD correspond à celui récupéré dans le body de notre requêtes
-                if (userEmail === req.body.email) {
-                    throw new Error("Email déjà utilisé pour la création d'un compte")
-                }
+            // On replace par notre méthode findByEmail, plus approprié
+            const userByEmail = await User.findByEmail(req.body.email)
+            if (userByEmail) {
+                return res.status(409).json({ message: "Email déjà utilisé pour la création d'un compte" })
             }
             /**
              *  On définit nos options qui représenterons nos critères de validation de mot de passe
@@ -67,7 +58,7 @@ const userController = {
              */
             const options = { minLength: 12, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }
             if (!validator.isStrongPassword(req.body.password, options)) {
-                throw new Error("Le mot de passe doit comporter au moins 12 caractères et au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial")
+                return res.status(409).json({ message: "Le mot de passe doit comporter au moins 12 caractères et au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial" })
             }
             // Si mot de passe valide on le hache
             const hash = await bcrypt.hash(req.body.password, 10);
@@ -80,7 +71,7 @@ const userController = {
             return res.status(201).json("Nouvel utilisateur enregistré avec succès")
         }
         catch (error) {
-            res.status(409).json(error.message)
+            return res.status(500).json({ message: 'Erreur serveur' })
         }
     },
 
@@ -93,7 +84,7 @@ const userController = {
             const user = await User.findById(id)
             // On prévoit une gestion d'erreur
             if (user === undefined) {
-                throw new Error("Aucune correspondance pour cette ID")
+                return res.status(404).json({ message: 'Aucune correspondance pour cette ID' })
             }
             /**
              * On aura donc besoin de l'objet user et des valeurs du corps de la requête
@@ -110,12 +101,11 @@ const userController = {
             const rowCounts = await newUpdate.update()
             // Gestion d'erreur
             if (rowCounts === 0) {
-                throw new Error('Erreur lors de la mise à jour des informations utilisateur.')
+                return res.status(409).json({ message: 'Erreur lors de la mise à jour des informations utilisateur.' })
             }
             res.status(200).json("Mise à jour du profil utilisateur effectuée.")
-        } catch (error) {
-            // On passe la réponse json un objet qui aura la propriété error, pour la récupérer plus facilement côté front
-            res.status(409).json({ error: error.message })
+        } catch (error) {            
+            return res.status(500).json({ message: 'Erreur serveur' })
         }
     },
 
@@ -125,16 +115,16 @@ const userController = {
             const id = parseInt(req.params.id);
             const user = await User.findById(id);
             if (user === undefined) {
-                throw new Error("Aucune correspondance pour cette ID")
+                return res.status(404).json({ message: 'Aucune correspondance pour cette ID' })
             }
             const deletedUser = new User(user)
             const rowCounts = await deletedUser.delete()
             if (rowCounts === 0) {
-                throw new Error("Erreur lors de la supression de l'utilisateur.")
+                return res.status(409).json({ message: "Erreur lors de la supression de l'utilisateur." })
             }
             return res.status(200).json("Suppression de l'utilisateur effectuée.")
         } catch (error) {
-            res.status(409).json(error.message)
+            return res.status(500).json({ message: 'Erreur serveur' })
         }
     }
 }
