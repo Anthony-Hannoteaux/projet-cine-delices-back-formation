@@ -23,11 +23,10 @@ const categoryController = {
       const newCategory = new Category(data);
       // // on utilise la méthode create pour cela
       const result = await newCategory.create();
-      // // renvoie une réponse en json
-      return res.json(result);
+      // // renvoie une réponse en json, status ok
+      return res.status(200).json(result);
       // // si erreur
     } catch (error) {
-      // console.log("Erreur lors de la création de la catégorie :", error);
       // alors on renvoie un status 500 (internal erreur servor) avec un message d'erreur
       return res.status(500).json("Impossible de créer de la catégorie.");
     }
@@ -39,10 +38,9 @@ const categoryController = {
       // on utilise la méthode findAll pour trouver toutes les catégories
       const result = await Category.findAll();
       // renvoie une réponse en json
-      return res.json(result);
+      return res.status(200).json(result);
       // si erreur
     } catch (error) {
-      // console.log("Erreur lors de la récupération des catégories :", error);
       // alors on renvoie un status 500 avec un message d'erreur
       return res.status(500).json("Impossible de récupérer les catégories.");
     }
@@ -65,9 +63,8 @@ const categoryController = {
         return res.status(404).json("Catégorié introuvable.");
       }
       // sinon on renvoie la nouvelle catégorie
-      return res.json(result);
+      return res.status(200).json(result);
     } catch (error) {
-      // console.log("Erreur lors de la récupération de la catégorie :", error);
       return res.status(500).json("Impossible de récupérer la catégorie.");
     }
   },
@@ -77,7 +74,6 @@ const categoryController = {
       // on récupère l'id présente dans l'url qu'on va convertir en entier avec la fonction parseInt
       const id = parseInt(req.params.id);
       const name = req.body.name;
-      // console.log("Nom récupéré :", name);
       // si id n'est pas un numbre ou que name est vide
       if (!id || !name) {
         //renvoie une erreur
@@ -90,10 +86,9 @@ const categoryController = {
         // on renvoie une erreur
         return res.status(404).json("Catégorie non trouvée.");
       }
-      return res.json(result);
+      return res.status(200).json(result);
     } catch (error) {
-      // console.log("Erreur lors de la mise à jour de la catégorie :", error);
-      return res.status(500).json("Impossible de mettre à jour la catégorie.");
+      return res.status(304).json("Impossible de mettre à jour la catégorie.");
     }
   },
 
@@ -112,9 +107,8 @@ const categoryController = {
       if (result === 0) {
         return res.status(404).json("La catégorie est introuvable.")
       }
-      return res.json(result);
+      return res.status(200).json(result);
     } catch (error) {
-      console.log("Erreur lors de la suppression de la catégorie :", error);
       return res.status(500).json("Impossible de supprimer la catégorie.");
     }
   },
