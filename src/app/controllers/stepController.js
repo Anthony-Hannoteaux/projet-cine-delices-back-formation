@@ -21,9 +21,8 @@ const stepController = {
                 return res.status(400).json("Échec de la création de l'étape.")
             }
             // si tout est ok, renvoie l'étape avec un message 
-            return res.json({ message: " Étape créée avec succès !", result });
+            return res.status(200).json({ message: " Étape créée avec succès !", result });
         } catch (error) {
-            // console.log("Erreur lors de la création de l'étape :", error);
             // alors on renvoie un status 500 (internal erreur servor) avec un message d'erreur
             return res.status(500).json("Impossible d'ajouter une étape.");
         }
@@ -34,10 +33,9 @@ const stepController = {
             // on utilise la méthode findAll pour trouver toutes les étapes
             const result = await Step.findAll();
             // renvoie une réponse en json
-            return res.json(result);
+            return res.status(200).json(result);
             // si erreur
         } catch (error) {
-            // console.log("Erreur lors de la récupération des étapes :", error);
             // alors on renvoie un status 500 avec un message d'erreur
             return res.status(500).json("Impossible de récupérer les étapes.");
         }
@@ -60,9 +58,8 @@ const stepController = {
                 return res.status(404).json("Étape introuvable.");
             }
             // sinon on renvoie l'étape
-            return res.json(result);
+            return res.status(200).json(result);
         } catch (error) {
-            // console.log("Erreur lors de la récupération de l'étape :", error);
             return res.status(500).json("Impossible de récupérer l'étape.");
         }
     },
@@ -87,9 +84,8 @@ const stepController = {
                 // renvoie une erreur
                 return res.status(400).json("Étape non trouvée.")
             }
-            return res.json(result, ": Étape modifiée avec succès");
+            return res.status(200).json(result, ": Étape modifiée avec succès");
         } catch (error) {
-            console.log("Erreur lors de la mise à jour de l'étape :", error);
             return res.status(500).json("Impossible de mettre à jour l'étape.");
         }
     },
@@ -113,9 +109,8 @@ const stepController = {
                 return res.status(404).json("Étape non trouvée.")
             }
             // sinon renvoie le resultat après suppression effectuée
-            return res.json(result);
+            return res.status(200).json(result);
         } catch (error) {
-            console.log("Erreur lors de la suppression de l'étape :", error);
             return res.status(500).json("Impossible de supprimer la catégorie.");
         }
     },
