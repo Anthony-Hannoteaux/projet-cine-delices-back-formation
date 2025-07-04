@@ -6,24 +6,26 @@ import client from "../database.js";
 class Category {
   #id;
   #name;
-  
+
 
   // création d'instance de notre classe Catagory grâce au constructeur avec pour argument name
-  constructor(id, name) {
-    this.id = id;
-    this.name = name;
+  constructor(config) {
+    this.id = config.id;
+    this.name = config.name;
   }
+
   // utilisation de getter pour récupérer la valeur de la propriété name
   get name() {
     return this.#name;
   }
   // utilisation de setter pour modifier la valeur de la propriété name
   set name(value) {
-    // mise en place d'une condition : si la valeur n'est pas une chaine de caractères alors je renvoie une erreur
-    if (typeof value !== "string") {
-      throw new Error(`"${value}" n'est pas une chaîne de caractère`);
+    // si la valeur n'est pas une chaine de caractères et que la valeur est non défini 
+    if (typeof value !== "string" && value === undefined) {
+      //alors je renvoie une erreur
+      throw new Error(`"${value}" doit être une chaîne de caractères non vide.`);
     }
-    // si la valeur correspond bien à une chîne de caractère alors je renvoie la valeur de name
+    // sinon renvoie la valeur de name
     return this.#name = value;
   }
 
@@ -31,9 +33,6 @@ class Category {
     return this.#id;
   }
   set id(value) {
-    if (typeof value !== "number") {
-      throw new Error(`"${value}" n'est pas un nombre`);
-    }
     return this.#id = value;
   }
 
@@ -47,7 +46,7 @@ class Category {
     const result = await client.query(
       // on insert une nouvelle categorie dans la table category
       // avec comme paramètre de sécurité $1 pour éviter les injections SQL (obligatoire)
-      `INSERT INTO category (name) VALUES ($1);`,
+      `INSERT INTO category ("name") VALUES ($1);`,
       // on assigne cette nouvelle valeur à name
       [this.#name]
     );
@@ -84,7 +83,7 @@ class Category {
     const result = await client.query(`DELETE FROM category WHERE id = $1`, [
       this.#id,
     ]);
-    return result.rows;
+    return result.rowCount;
   }
 }
 

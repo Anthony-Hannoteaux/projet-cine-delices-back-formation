@@ -19,6 +19,7 @@ const app = express();
 // Paramétrage de notre moteur de vue
 app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
+
 app.set('views', './src/app/views')
 
 // Middleware nous permettant de récupérer le contenu JSON de la requête via req.body
