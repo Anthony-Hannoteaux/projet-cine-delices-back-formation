@@ -32,8 +32,7 @@ const authController = {
              * Ensuite la clé secrète
              * Suivie d'un objet qui représentera nos options, ici l'expiration du token
              */
-            const token = jwt.sign({ userID: user.id }, process.env.SECRET, { expiresIn: "4h" });
-            console.log(token)
+            const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: "4h" });
             return res.status(200).json({ token })
         } catch (error) {
             return res.status(500).json({ message: "Erreur serveur" })
