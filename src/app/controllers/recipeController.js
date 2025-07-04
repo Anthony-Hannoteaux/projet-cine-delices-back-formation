@@ -3,31 +3,56 @@ import Recipe from '../models/Recipe.js';
 const recipeController = {
   // Créer une nouvelle recette
   createRecipe: async (req, res) => {
-    // On récupère les propriétés attendues depuis le body de la requête
-    try {
-      const {
-        title, description, difficulty, budget, servings,
-        preparation_time, cook_time, story, picture,
-        user_id, movie_id
-      } = req.body;
+    console.log("🛰️ Fichier reçu :", req.file);
+    console.log("📦 Corps reçu :", req.body);
 
-      // On instancie une nouvelle recette avec les données reçues
+    try {
+      // Extraction et conversion des champs du body
+      const title = req.body.title?.trim();
+      const description = req.body.description?.trim();
+      const difficulty = req.body.difficulty;
+      const budget = req.body.budget;
+      const category = req.body.category;
+
+      const servings = parseInt(req.body.servings, 10) || 0;
+      const preparation_time = parseInt(req.body.preparation_time, 10) || 0;
+      const cook_time = parseInt(req.body.cook_time, 10) || 0;
+
+      const story = req.body.story?.trim() || "";
+      const user_id = parseInt(req.body.user_id, 10);
+      const movie_id = parseInt(req.body.movie_id, 10);
+
+      // Parse des tableaux envoyés en JSON
+      const ingredients = JSON.parse(req.body.ingredients || "[]");
+      const steps = JSON.parse(req.body.steps || "[]");
+
+      // Gestion du fichier image (optionnel)
+      let picture = null;
+      if (req.file) {
+        picture = req.file.filename; // ou req.file.path selon ta logique
+      }
+
+      // Instanciation de la recette
       const recette = new Recipe(
         null, title, description, difficulty, budget,
         servings, preparation_time, cook_time, story,
-        picture, user_id, movie_id
+        picture, user_id, movie_id, category, ingredients, steps
       );
 
-      // On appelle la méthode d’instance create() pour insérer la recette en base
+      // Insertion en base
       const result = await recette.create();
-      // Renvoi des recettes au format JSON
-      res.status(201).json({ message: 'Recette créée avec succès', inserted: result });
-      // Gestion d'erreur
+
+      res.status(201).json({
+        message: 'Recette créée avec succès',
+        inserted: result
+      });
+
     } catch (error) {
-      console.error('createRecipe:', error);
-      res.status(500).json({ error: 'Erreur lors de la création de la recette' });
+      console.error("Erreur createRecipe:", error);
+      res.status(500).json({ error: error.message || "Erreur lors de la création de la recette" });
     }
   },
+
 
   // Lire toutes les recettes
   getAllRecipes: async (req, res) => {

@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import mainController from "./controllers/mainController.js";
 import apiController from "./controllers/apiController.js";
 import recipeController from "./controllers/recipeController.js";
@@ -6,6 +7,8 @@ import movieController from "./controllers/movieController.js";
 
 // Création de notre routeur express
 const router = express.Router();
+
+const upload = multer({ dest: "uploads/" });
 
 // Activation du middleware express.json()
 router.use(express.json());
@@ -17,14 +20,8 @@ router.get("/catalogue", apiController.catalogue);
 
 // Routes backend
 
-router.get("/api/ping", (req, res) => {
-  console.log("🎯 Backend a bien reçu GET /api/ping");
-  res.json({ message: "pong" });
-});
-
-
 // Créer une recette
-router.post('/api/recipes', recipeController.createRecipe);
+router.post("/api/recipes", upload.single("picture"), recipeController.createRecipe);
 // Récupérer toutes les recettes
 router.get('/api/recipes', recipeController.getAllRecipes);
 // Récupérer une recette par ID
