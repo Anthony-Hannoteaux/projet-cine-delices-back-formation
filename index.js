@@ -5,6 +5,8 @@ import express from "express";
 import * as dotenv from "dotenv";
 // Import de notre routeur
 import router from "./src/app/router.js";
+// Import du module cors pour permettre les echanges entre front et back
+import cors from "cors";
 
 // Appel de notre fichier .env pour nos variables d'états
 dotenv.config();
@@ -21,6 +23,8 @@ const app = express();
 app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
 app.set('views', './src/app/views')
+
+app.use(cors());
 
 // Appel du router de notre application
 app.use(router);
