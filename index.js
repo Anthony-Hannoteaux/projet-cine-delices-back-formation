@@ -21,8 +21,10 @@ app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
 
 app.set('views', './src/app/views')
-// Permettra à Express de récupérer le contenu JSON de la requête via req.body
+
+// Middleware nous permettant de récupérer le contenu JSON de la requête via req.body
 app.use(express.json());
+
 // Appel du router de notre application
 app.use(router);
 
