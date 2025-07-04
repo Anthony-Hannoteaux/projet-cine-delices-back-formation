@@ -13,19 +13,19 @@ class Category {
     this.id = config.id;
     this.name = config.name;
   }
+
   // utilisation de getter pour récupérer la valeur de la propriété name
   get name() {
     return this.#name;
   }
   // utilisation de setter pour modifier la valeur de la propriété name
   set name(value) {
-    // pour éviter les erreurs, si la valeure de name vaut undefined pour éviter les erreurs,
-    if (value === undefined) return;
-    // mise en place d'une condition : si la valeur n'est pas une chaine de caractères alors je renvoie une erreur
-    if (typeof value !== "string") {
-      throw new Error(`"${value}" n'est pas une chaîne de caractère`);
+    // si la valeur n'est pas une chaine de caractères et que la valeur est non défini 
+    if (typeof value !== "string" && value === undefined) {
+      //alors je renvoie une erreur
+      throw new Error(`"${value}" doit être une chaîne de caractères non vide.`);
     }
-    // si la valeur correspond bien à une chîne de caractère alors je renvoie la valeur de name
+    // sinon renvoie la valeur de name
     return this.#name = value;
   }
 
