@@ -11,11 +11,7 @@ class Category {
   // création d'instance de notre classe Catagory grâce au constructeur avec pour argument name
   constructor(config) {
     this.id = config.id;
-    // on vérifie que la propriété name est différente de undefined pour éviter les erreurs
-    // pour nous permettre de ne pas appeler le setter avec une valeur undefined
-    if (config.name !== undefined) {
-      this.name = config.name;
-    }
+    this.name = config.name;
   }
   // utilisation de getter pour récupérer la valeur de la propriété name
   get name() {
