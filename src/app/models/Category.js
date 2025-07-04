@@ -23,6 +23,8 @@ class Category {
   }
   // utilisation de setter pour modifier la valeur de la propriété name
   set name(value) {
+    // pour éviter les erreurs, si la valeure de name vaut undefined pour éviter les erreurs,
+    if (value === undefined) return;
     // mise en place d'une condition : si la valeur n'est pas une chaine de caractères alors je renvoie une erreur
     if (typeof value !== "string") {
       throw new Error(`"${value}" n'est pas une chaîne de caractère`);
