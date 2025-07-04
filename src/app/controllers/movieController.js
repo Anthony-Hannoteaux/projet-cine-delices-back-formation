@@ -42,26 +42,30 @@ const movieController = {
 
     // récupération d'un film à partir de l'id
     getMovieById: async (req, res) => {
-        const movieId = req.params.id;
+        // récupération de l'id dans les paramètres de la requête, celle-ci étant au départ une string, méthode parseInt pour la transformer en entier
+        const movieId = parseInt(req.params.id);
         try {
             const movieById = await Movie.findById(movieId);
+            if (!movieById) {
+                res.status(404).json({ error: "L'id spécifié n'existe pas" })
+            }
             res.status(200).json(movieById);
         }
         catch (error) {
-            const {databaseMovieId} = Movie.map({id})
-                if (movieId !== databaseMovieId) {
-                    res.status(404).json({ error: "L'id spécifié n'existe pas" })
-                }
-            };
             res.status(500).json({ error: "Erreur lors de la récupération du film" })
-        },
+
+        };
+    },
 
     // modification d'un film à partir de l'id
     updateMovie: async (req, res) => {
         try {
-            // récupération de l'id dans l'URL
-            const movieId = req.params.id;
+            // récupération de l'id dans les paramètres de la requête et conversion en entier
+            const movieId = parseInt(req.params.id);
             const movieById = await Movie.findById(movieId);
+            if (!movieById) {
+                res.status(404).json({ error: "L'id spécifié n'existe pas" })
+            }
             const { TMDB_id, title, overview, poster_path, media_type } = req.body;
             const updatedMovie = await movieById.update({ TMDB_id, title, overview, poster_path, media_type });
             res.status(200).json({ message: "Le film a bien été mis à jour", modified: updatedMovie });
@@ -69,7 +73,23 @@ const movieController = {
         catch (error) {
             res.status(500).json({ error: "Erreur lors de la modification du film" });
         }
+    },
+
+    deleteMovie: async (req, res) => {
+        try {
+            // récupération de l'id dans les paramètres de la requête et conversion en entier
+            const movieId = parseInt(req.params.id);
+            const movieToDelete = await Movie.findById(movieId);
+            if (!movieToDelete) {
+                res.status(404).json({ error: "L'id spécifié n'existe pas" })
+            }
+            const deletedMovie = await movieToDelete.delete();
+            res.status(200).json({ message: "Le film a bien été supprimé", removed: deletedMovie });
+        }
+        catch (error) {
+            res.status(500).json({ error: "Erreur lors de la suppression du film" });
+        }
     }
-}
+};
 
 export default movieController;
