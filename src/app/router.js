@@ -8,6 +8,7 @@ import movieController from "./controllers/movieController.js";
 // Création de notre routeur express
 const router = express.Router();
 
+// Configuration de Multer pour stocker les fichiers uploadés dans le dossier "uploads/"
 const upload = multer({ dest: "uploads/" });
 
 // Activation du middleware express.json()

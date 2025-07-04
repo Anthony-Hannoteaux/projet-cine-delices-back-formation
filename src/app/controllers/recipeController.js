@@ -3,9 +3,6 @@ import Recipe from '../models/Recipe.js';
 const recipeController = {
   // Créer une nouvelle recette
   createRecipe: async (req, res) => {
-    console.log("🛰️ Fichier reçu :", req.file);
-    console.log("📦 Corps reçu :", req.body);
-
     try {
       // Extraction et conversion des champs du body
       const title = req.body.title?.trim();
@@ -14,6 +11,7 @@ const recipeController = {
       const budget = req.body.budget;
       const category = req.body.category;
 
+      // Les valeurs numériques sont converties avec parseInt(...) car req.body contient tout sous forme de chaînes
       const servings = parseInt(req.body.servings, 10) || 0;
       const preparation_time = parseInt(req.body.preparation_time, 10) || 0;
       const cook_time = parseInt(req.body.cook_time, 10) || 0;
@@ -22,14 +20,17 @@ const recipeController = {
       const user_id = parseInt(req.body.user_id, 10);
       const movie_id = parseInt(req.body.movie_id, 10);
 
-      // Parse des tableaux envoyés en JSON
+      // Parse des tableaux envoyés en JSON en tableaux JavaScript réels
+      // Cela permet d’enregistrer plusieurs lignes
       const ingredients = JSON.parse(req.body.ingredients || "[]");
       const steps = JSON.parse(req.body.steps || "[]");
 
-      // Gestion du fichier image (optionnel)
+      // Gestion du fichier image
+      // Grâce à multer, l’image est interceptée comme un fichier
+      // On extrait le nom du fichier pour pouvoir le stocker en BDD
       let picture = null;
       if (req.file) {
-        picture = req.file.filename; // ou req.file.path selon ta logique
+        picture = req.file.filename;
       }
 
       // Instanciation de la recette
@@ -39,7 +40,7 @@ const recipeController = {
         picture, user_id, movie_id, category, ingredients, steps
       );
 
-      // Insertion en base
+      // Insertion en BDD
       const result = await recette.create();
 
       res.status(201).json({

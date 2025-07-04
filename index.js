@@ -24,6 +24,8 @@ app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
 app.set('views', './src/app/views')
 
+// Autorise les requêtes cross-origin (CORS)
+// Permet au front (localhost:1234) de communiquer avec le back (localhost:3000)
 app.use(cors());
 
 // Appel du router de notre application
