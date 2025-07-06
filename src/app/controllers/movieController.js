@@ -6,24 +6,27 @@ const movieController = {
     createMovie: async (req, res) => {
         // bloc try, premier composant de la structure de gestion des erreurs, contient le code à éxécuter tout en surveillant les erreurs potentielles
         try {
-            // récupération des propriétés attendues depuis le corps de la requête
+            // récupération des propriétés attendues depuis le corps de la requête qui ne contient que des strings
+            // et conversion des valeurs numériques en entiers
             const {
-                TMDB_id, title, overview, poster_path, media_type
+                title, genre, overview, poster_path, media_type
             } = req.body;
+            const id = parseInt(req.body.id);
+            const TMDB_id = parseInt(req.body.TMDB_id);
             // création d'une nouvelle instance de Movie avec les données reçues
             const movieToAdd = new Movie(
-                TMDB_id, title, overview, poster_path, media_type
+                id, TMDB_id, title, genre, overview, poster_path, media_type
             )
 
             // appel de la méthode d'instance create() pour l'insertion dans la BDD
             const result = await movieToAdd.create();
             // renvoi du résultat au format JSON avec le statut 201 corespondant à "created"
-            res.status(201).json({ message: "Film créé avec succès", inserted: result });
+            return res.status(201).json({ message: "Film créé avec succès", inserted: result });
         }
         // bloc catch, à exécuter en cas d'erreur dans le bloc try
         catch (error) {
             // affichage du message d'erreur avec le statut 500 correspondant à une erreur serveur interne
-            res.status(500).json({ error: "Erreur lors de la création du film" });
+            return res.status(500).json({ error: "Erreur lors de la création du film" });
         }
     },
 
@@ -33,10 +36,10 @@ const movieController = {
             // appel à la méthode statique findAll() de la classe Movie
             const allMovies = await Movie.findAll();
             // renvoi des enregistrements au format JSON, avec un statut 200 pour ok
-            res.status(200).json(allMovies);
+            return res.status(200).json(allMovies);
         }
         catch (error) {
-            res.status(500).json({ error: "Erreur lors de la récupération de tous les films" })
+            return res.status(500).json({ error: "Erreur lors de la récupération de tous les films" })
         }
     },
 
@@ -47,14 +50,14 @@ const movieController = {
         try {
             const movieById = await Movie.findById(movieId);
             if (!movieById) {
-                res.status(404).json({ error: "L'id spécifié n'existe pas" })
+                return res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
-            res.status(200).json(movieById);
+            return res.status(200).json(movieById);
         }
         catch (error) {
-            res.status(500).json({ error: "Erreur lors de la récupération du film" })
+            return res.status(500).json({ error: "Erreur lors de la récupération du film" })
 
-        };
+        }
     },
 
     // modification d'un film à partir de l'id
@@ -66,12 +69,31 @@ const movieController = {
             if (!movieById) {
                 res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
-            const { TMDB_id, title, overview, poster_path, media_type } = req.body;
-            const updatedMovie = await movieById.update({ TMDB_id, title, overview, poster_path, media_type });
-            res.status(200).json({ message: "Le film a bien été mis à jour", modified: updatedMovie });
+            // récupération des propriétés attendues depuis le corps de la requête qui ne contient que des strings
+            // et conversion des valeurs numériques en entiers
+            const {
+                title, genre, overview, poster_path, media_type
+            } = req.body;
+            const id = parseInt(req.body.id);
+            const TMDB_id = parseInt(req.body.TMDB_id);
+            // création d'une nouvelle instance de Movie avec les données reçues dans le corps de la requête
+            const updatedMovie = new Movie(
+                id, TMDB_id, title, genre, overview, poster_path, media_type
+            )
+
+            // appel de la méthode d'instance update() pour l'insertion dans la BDD
+            const result = await updatedMovie.update();
+            // si result est false, alors affichage d'un message d'erreur avec le statut 304 correspondant à "not modified"
+            if (!result) {
+                return res.status(304).json({ error: "Modification non effectuée" })
+            }
+            // renvoi du résultat au format JSON avec le statut 200 corespondant à "OK"
+            return res.status(200).json({ message: "Film modifié avec succès", modified: result });
         }
+        // bloc catch, à exécuter en cas d'erreur dans le bloc try
         catch (error) {
-            res.status(500).json({ error: "Erreur lors de la modification du film" });
+            // affichage du message d'erreur avec le statut 500 correspondant à une erreur serveur interne
+            return res.status(500).json({ error: "Erreur lors de la modification du film" });
         }
     },
 
@@ -79,10 +101,13 @@ const movieController = {
         try {
             // récupération de l'id dans les paramètres de la requête et conversion en entier
             const movieId = parseInt(req.params.id);
-            const movieToDelete = await Movie.findById(movieId);
-            if (!movieToDelete) {
+            const movieById = await Movie.findById(movieId);
+            if (!movieById) {
                 res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
+            // création de l'instance du film à supprimer
+            const movieToDelete = new Movie(movieById)
+            // appel de la méthode d'instance delete
             const deletedMovie = await movieToDelete.delete();
             res.status(200).json({ message: "Le film a bien été supprimé", removed: deletedMovie });
         }
