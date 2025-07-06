@@ -1,0 +1,3 @@
+### Get movie by id
+GET  http://localhost:3000/api/movies/3
+Content-Type: application/json; charset=utf-8

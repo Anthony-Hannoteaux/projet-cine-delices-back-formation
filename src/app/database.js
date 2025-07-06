@@ -6,7 +6,13 @@ dotenv.config();
 
 
 // Fichier .env n'est pas lu.. à corriger avant de push !
-const client = new pg.Client();
+const client = new pg.Client({
+    PGUSER:,
+    PGHOST: localhost,
+    PGPASSWORD:,
+    PGDATABASE:,
+    PGPORT:
+});
 
 client.connect();
 
