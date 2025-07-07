@@ -48,8 +48,8 @@ class Step {
             stepData.id,
             stepData.number,
             stepData.description, {
-                id: stepData.recipe_id
-            } // Référence à la recette
+            id: stepData.recipe_id
+        } // Référence à la recette
         );
     }
 
