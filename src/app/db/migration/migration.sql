@@ -44,7 +44,7 @@ CREATE TABLE "movie_has_genre" (
 
 CREATE TABLE "category" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" VARCHAR(24) NOT NULL
+    "name" VARCHAR(24) UNIQUE NOT NULL
 );
 
 CREATE TABLE "recipe" (

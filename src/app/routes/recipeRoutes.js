@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { searchMovie } from '../services/movieService.js';
 import Recipe from './models/Recipe.js';
