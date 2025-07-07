@@ -8,12 +8,6 @@ import recipeController from "./controllers/recipeController.js";
 // Création de notre routeur express
 const router = express.Router();
 
-/**
- * Utilisation du middleware express.json()
- * Permet l'analyse du corps de nos requêtes
- */
-router.use(express.json());
-
 // Route principale de l'application
 router.get("/", mainController.home);
 
