@@ -3,7 +3,11 @@ GET http://localhost:3000/api/users
 Content-Type: application/json; charset=utf-8
 
 ### GET user by id
-GET http://localhost:3000/api/users/6
+GET http://localhost:3000/api/users/id/6
+Content-Type: application/json; charset=utf-8
+
+### GET user by email
+GET http://localhost:3000/api/users/email/toto@mail.com
 Content-Type: application/json; charset=utf-8
 
 ### POST create user
@@ -11,19 +15,19 @@ POST http://localhost:3000/api/users
 Content-Type: application/json; charset=utf-8
 
 {
-    "username": "Anthony",
-    "email": "tata@mail.com",
-    "password": "SuperMotDePasse"
+    "username": "newUser",
+    "email": "newuser@mail.co",
+    "password": "SuperMotDePasse@1"
 }
 
 ### UPDATE user
-PATCH http://localhost:3000/api/users/6
+PATCH http://localhost:3000/api/users/7
 Content-Type: application/json; charset=utf-8
 
 {
-    "email": "toto@mail.com"
+    "email": "tata@mail.com"
 }
 
 ### DELETE user
-DELETE http://localhost:3000/api/users/5
+DELETE http://localhost:3000/api/users/3
 Content-Type: application/json; charset=utf-8
