@@ -12,18 +12,18 @@ const recipeController = {
       const category = req.body.category;
 
       // Les valeurs numériques sont converties avec parseInt(...) car req.body contient tout sous forme de chaînes
-      const servings = parseInt(req.body.servings, 10) || 0;
+      const servings = parseInt(req.body.servings, 10) || 1;
       const preparation_time = parseInt(req.body.preparation_time, 10) || 0;
       const cook_time = parseInt(req.body.cook_time, 10) || 0;
 
       const story = req.body.story?.trim() || "";
-      const user_id = parseInt(req.body.user_id, 10);
+      //const user_id = parseInt(req.body.user_id, 10);
       const movie_id = parseInt(req.body.movie_id, 10);
 
       // Parse des tableaux envoyés en JSON en tableaux JavaScript réels
       // Cela permet d’enregistrer plusieurs lignes
-      const ingredients = JSON.parse(req.body.ingredients || "[]");
-      const steps = JSON.parse(req.body.steps || "[]");
+      const ingredients = JSON.parse(req.body.ingredients);
+      const steps = JSON.parse(req.body.steps);
 
       // Gestion du fichier image
       // Grâce à multer, l’image est interceptée comme un fichier
@@ -37,8 +37,14 @@ const recipeController = {
       const recette = new Recipe(
         null, title, description, difficulty, budget,
         servings, preparation_time, cook_time, story,
-        picture, user_id, movie_id, category, ingredients, steps
+        picture, /*user_id,*/ movie_id, category, ingredients, steps
       );
+
+      recette.user_id = req.user.id;
+
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: "Utilisateur non authentifié" });
+      }
 
       // Insertion en BDD
       const result = await recette.create();
