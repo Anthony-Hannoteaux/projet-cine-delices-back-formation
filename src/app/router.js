@@ -4,6 +4,7 @@ import authController from "./controllers/authController.js";
 import apiController from "./controllers/apiController.js";
 import categoryController from "./controllers/categoryController.js";
 import recipeController from "./controllers/recipeController.js";
+import stepController from "./controllers/stepController.js";
 
 // Création de notre routeur express
 const router = express.Router();
@@ -53,5 +54,12 @@ router.get("/api/categories/:id", categoryController.getCategoryById);
 // patch et non put car on veut modifier une catégorie en particulier
 router.patch("/api/categories/:id", categoryController.updateCategory);
 router.delete("/api/categories/:id", categoryController.deleteCategory);
+
+// routes pour les étapes
+router.post('/api/steps', stepController.createStep);
+router.get('/api/steps', stepController.getAllSteps);
+router.get('/api/steps/:id', stepController.getStepById);
+router.patch('/api/steps/:id', stepController.updateStep);
+router.delete('/api/steps/:id', stepController.deleteStep);
 
 export default router;
