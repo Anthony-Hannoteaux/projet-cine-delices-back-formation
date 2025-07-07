@@ -104,7 +104,7 @@ const userController = {
                 return res.status(409).json({ message: 'Erreur lors de la mise à jour des informations utilisateur.' })
             }
             res.status(200).json("Mise à jour du profil utilisateur effectuée.")
-        } catch (error) {            
+        } catch (error) {
             return res.status(500).json({ message: 'Erreur serveur' })
         }
     },

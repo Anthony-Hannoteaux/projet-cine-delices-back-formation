@@ -3,7 +3,7 @@ GET http://localhost:3000/api/users
 Content-Type: application/json; charset=utf-8
 
 ### GET user by id
-GET http://localhost:3000/api/users/id/2
+GET http://localhost:3000/api/users/id/6
 Content-Type: application/json; charset=utf-8
 
 ### GET user by email
@@ -21,13 +21,13 @@ Content-Type: application/json; charset=utf-8
 }
 
 ### UPDATE user
-PATCH http://localhost:3000/api/users/9
+PATCH http://localhost:3000/api/users/7
 Content-Type: application/json; charset=utf-8
 
 {
-    "email": "newuser@mail.com"
+    "email": "tata@mail.com"
 }
 
 ### DELETE user
-DELETE http://localhost:3000/api/users/8
+DELETE http://localhost:3000/api/users/3
 Content-Type: application/json; charset=utf-8

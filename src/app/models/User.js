@@ -13,8 +13,8 @@ class User {
         this.email = config.email;
         this.password = config.password;
         this.id = config.id;
-
     }
+    
     // mise en place des getters
     get username() {
         return this.#username;
