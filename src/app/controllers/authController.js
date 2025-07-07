@@ -20,14 +20,14 @@ const authController = {
                 return res.status(404).json({ message: "Couple identifiant/mot de passe incorrectes"})
             }
             /**
-             * Génération d'un token d'authentification avec 
+             * Génération d'un token d'authentification
              * Pour plus de précision sur la construction d'un token JWT :
              * @link https://www.npmjs.com/package/jsonwebtoken
              */
 
             /**
              * Syntaxe du token
-             * On fait appel à la méthode sign pour initialiser notre toker
+             * On fait appel à la méthode sign pour initialiser notre token
              * On y ajoute le payload, qui sera l'objet stocké dans notre token
              * Ensuite la clé secrète
              * Suivie d'un objet qui représentera nos options, ici l'expiration du token
