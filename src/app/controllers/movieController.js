@@ -6,16 +6,17 @@ const movieController = {
     createMovie: async (req, res) => {
         // bloc try, premier composant de la structure de gestion des erreurs, contient le code à éxécuter tout en surveillant les erreurs potentielles
         try {
-            // récupération des propriétés attendues depuis le corps de la requête qui ne contient que des strings
+            // récupération des [prop]riétés attendues depuis le corps de la requête qui ne contient que des strings
             // et conversion des valeurs numériques en entiers
-            const {
-                title, genre, overview, poster_path, media_type
-            } = req.body;
-            const id = parseInt(req.body.id);
             const TMDB_id = parseInt(req.body.TMDB_id);
+            const title = req.body.title;
+            const overview = req.body.overview;
+            const poster_path = req.body.poster_path;
+            const media_type = req.body.media_type;
+
             // création d'une nouvelle instance de Movie avec les données reçues
             const movieToAdd = new Movie(
-                id, TMDB_id, title, genre, overview, poster_path, media_type
+                { TMDB_id, title, overview, poster_path, media_type }
             )
 
             // appel de la méthode d'instance create() pour l'insertion dans la BDD
@@ -49,6 +50,7 @@ const movieController = {
         const movieId = parseInt(req.params.id);
         try {
             const movieById = await Movie.findById(movieId);
+            console.log(movieById)
             if (!movieById) {
                 return res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
@@ -66,26 +68,37 @@ const movieController = {
             // récupération de l'id dans les paramètres de la requête et conversion en entier
             const movieId = parseInt(req.params.id);
             const movieById = await Movie.findById(movieId);
+                        console.log(movieById)
+
             if (!movieById) {
                 res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
             // récupération des propriétés attendues depuis le corps de la requête qui ne contient que des strings
             // et conversion des valeurs numériques en entiers
-            const {
-                title, genre, overview, poster_path, media_type
-            } = req.body;
-            const id = parseInt(req.body.id);
-            const TMDB_id = parseInt(req.body.TMDB_id);
-            // création d'une nouvelle instance de Movie avec les données reçues dans le corps de la requête
-            const updatedMovie = new Movie(
-                id, TMDB_id, title, genre, overview, poster_path, media_type
-            )
+            function copyProps(props, src, target = {}) {
+    for (let prop of props) {
+        if (src[prop] !== null) {
+            target[prop] === src[prop];
+        }
+    }
+    return target;
+    console.log(target)
+}
 
-            // appel de la méthode d'instance update() pour l'insertion dans la BDD
-            const result = await updatedMovie.update();
+
+const newProps = ["TMDB_id", "title", "overview", "poster_path", "media_type"];
+await Movie.update({
+    where: {
+        id: parseInt(movieById)
+    },
+    data: copyProps(newProps, req.body)
+})
+            // appel à la méthode d'instance update() pour l'insertion dans la BDD
+            // const result = await updatedMovie.update();
+
             // si result est false, alors affichage d'un message d'erreur avec le statut 304 correspondant à "not modified"
-            if (!result) {
-                return res.status(304).json({ error: "Modification non effectuée" })
+            if (result === 0) {
+                return res.status(304).json({ error: "Modification non effectuée" });
             }
             // renvoi du résultat au format JSON avec le statut 200 corespondant à "OK"
             return res.status(200).json({ message: "Film modifié avec succès", modified: result });
@@ -105,6 +118,7 @@ const movieController = {
             if (!movieById) {
                 res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
+            console.log(req.params.id)
             // création de l'instance du film à supprimer
             const movieToDelete = new Movie(movieById)
             // appel de la méthode d'instance delete

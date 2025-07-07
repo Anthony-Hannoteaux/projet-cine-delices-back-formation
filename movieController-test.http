@@ -1,3 +1,34 @@
 ### Get movie by id
-GET  http://localhost:3000/api/movies/3
+GET  http://localhost:3000/api/movies/5
+Content-Type: application/json; charset=utf-8
+
+### Get all movies
+GET  http://localhost:3000/api/movies
+Content-Type: application/json; charset=utf-8
+
+
+### Create movie
+POST http://localhost:3000/api/movies
+Content-Type: application/json; charset=utf-8
+
+{
+    "title": "Le meilleur film que vous n'ayez jamais vu",
+    "genre": "autre",
+    "overview": "La best description ever",
+    "poster_path": "chemin vers une photo",
+    "media_type": "movie",
+    "TMDB_id": "5406265"
+    }
+
+### Update movie
+PATCH http://localhost:3000/api/movies/5
+Content-Type: application/json; charset=utf-8
+
+{
+    "TMDB_id": 5110513,
+    "media_type": "tv"
+}
+
+### Delete movie
+PATCH http://localhost:3000/api/movies/5
 Content-Type: application/json; charset=utf-8
