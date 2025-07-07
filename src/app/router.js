@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import mainController from "./controllers/mainController.js";
+import userController from "./controllers/userController.js";
 import authController from "./controllers/authController.js";
 import apiController from "./controllers/apiController.js";
 import categoryController from "./controllers/categoryController.js";
@@ -14,25 +15,24 @@ const router = express.Router();
 // Configuration de Multer pour stocker les fichiers uploadés dans le dossier "uploads/"
 const upload = multer({ dest: "uploads/" });
 
-// Activation du middleware express.json()
-router.use(express.json());
-
 // Route principale de l'application
 router.get("/", mainController.home);
 
 // Routes API pour la gestion du CRUD du modèle User
 // Routes GET
-router.get("/api/users", authController.getAllUser);
-router.get("/api/users/:id", authController.getUserById);
-
+router.get("/api/users", userController.getAllUser);
+router.get("/api/users/id/:id", userController.getUserById);
+router.get("/api/users/email/:email", userController.getUserByEmail);
 // Route POST
-router.post("/api/users/", authController.createNewUser);
-
+router.post("/api/users/", userController.createNewUser);
 // Route PATCH
-router.patch("/api/users/:id", authController.updateUser);
-
+router.patch("/api/users/:id", userController.updateUser);
 // Route DELETE
-router.delete("/api/users/:id", authController.delete);
+router.delete("/api/users/:id", userController.delete);
+
+// Route API dédié à l'authentification
+// Route POST pour la connexion
+router.post("/api/auth/login", authController.login)
 
 router.get("/catalogue", apiController.catalogue);
 

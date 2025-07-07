@@ -24,9 +24,14 @@ app.set('view engine', 'ejs');
 
 app.set('views', './src/app/views')
 
-// Autorise les requêtes cross-origin (CORS)
-// Permet au front (localhost:1234) de communiquer avec le back (localhost:3000)
-app.use(cors());
+// Initialisation des options des cors
+const optionsCORS = {
+    origin: "http://localhost:1234"
+}
+
+// Middleware permettant la gestion des CORS
+app.use(cors(optionsCORS))
+
 // Middleware nous permettant de récupérer le contenu JSON de la requête via req.body
 app.use(express.json());
 

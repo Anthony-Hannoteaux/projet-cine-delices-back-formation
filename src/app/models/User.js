@@ -13,8 +13,8 @@ class User {
         this.email = config.email;
         this.password = config.password;
         this.id = config.id;
-
     }
+    
     // mise en place des getters
     get username() {
         return this.#username;
@@ -76,6 +76,15 @@ class User {
         const result = await client.query(`SELECT * FROM "user"
             WHERE id = $1`, [
             id
+        ]);
+        return result.rows[0];
+    }
+
+    // affiche l'enregistrement de l'email spécifié
+    static async findByEmail(email) {
+        const result = await client.query(`SELECT * FROM "user"
+            WHERE email = $1`, [
+            email
         ]);
         return result.rows[0];
     }

@@ -1,110 +1,43 @@
-import User from "../models/User.js";
-import apiController from "./apiController.js";
+import User from "../models/User.js"
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
+
+dotenv.config()
 
 const authController = {
-    // Route GET /api/users
-    getAllUser: async (req, res) => {
+    login: async (req, res) => {
         try {
-            const result = await User.findAll();
-            return res.status(200).json(result)
-        } catch (error) {
-            return res.status(500).json({ error: "Erreur interne du serveur." })
-        }
-    },
-
-    // Route GET /api/users/:id
-    getUserById: async (req, res) => {
-        try {
-            const id = parseInt(req.params.id);
-            const result = await User.findById(id);
-            // Gestion d'erreur si result est false (donc pas d'utilisateur à cet ID)
-            if (!result) {
-                throw new Error('Aucune correspondance pour cette ID')
+            // Nous commençons par vérifier si l'email est présent dans notre BDD
+            const user = await User.findByEmail(req.body.email)
+            // Si aucun n'utilisateur n'a été créé avec cet email alors
+            if (!user) {
+                // Message générique pour ne pas indiquer plus de précisions sur la donnée incorrecte 
+                return res.status(404).json({ message: "Couple identifiant/mot de passe incorrectes"})
             }
-            return res.status(200).json(result)
-        } catch (error) {
-            res.status(404).json(error.message)
-        }
-    },
-
-    // Route POST /api/users
-    createNewUser: async (req, res) => {
-        try {
+            const passwordMatched = await bcrypt.compare(req.body.password, user.password);
+            if (!passwordMatched) {
+                return res.status(404).json({ message: "Couple identifiant/mot de passe incorrectes"})
+            }
             /**
-             * Nous souhaitons vérifié si une correspondance existe entre l'email récupéré
-             * Et ceux stocké dans notre BDD
+             * Génération d'un token d'authentification
+             * Pour plus de précision sur la construction d'un token JWT :
+             * @link https://www.npmjs.com/package/jsonwebtoken
              */
-            // On commence par listé tout nos utilisateurs
-            const AllUser = await User.findAll();
-            // Pour tout les objet user
-            for (let index = 0; index <= AllUser.length - 1; index++) {
-                const userEmail = AllUser[index].email;
-                // Si l'email stocké en BDD correspond à celui récupéré dans le body de notre requêtes
-                if (userEmail === req.body.email) {
-                    throw new Error('Utilisateur déjà existant')
-                }
-            }
-            const newUser = new User(req.body)
-            await newUser.create()
-            return res.status(200).json("Nouvel utilisateur enregistré avec succès")
-        }
-        catch (error) {
-            res.status(409).json(error.message)
-        }
-    },
 
-    // Route PATCH /api/users/:id
-    updateUser: async (req, res) => {
-        try {
-            // On commence par récupérer l'ID passé en paramètre de notre url
-            const id = parseInt(req.params.id);
-            // On instancie un objet de type User pour l'enregistrement récupérée
-            const user = await User.findById(id)
-            // On prévoit une gestion d'erreur
-            if (user === undefined) {
-                throw new Error("Aucune correspondance pour cette ID")
-            }
             /**
-             * On aura donc besoin de l'objet user et des valeurs du corps de la requête
-             * Nous utiliserons le spred operator ``...``
-             * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#examples
-            */
-            const userUpdate = { ...user, ...req.body }
-            // On initialise notre objet de type User
-            const newUpdate = new User(userUpdate)
-            /**
-             * On fait appel à notre méthode d'instance pour faire appel à la requête associée
-             * Et on stock le résultat
+             * Syntaxe du token
+             * On fait appel à la méthode sign pour initialiser notre token
+             * On y ajoute le payload, qui sera l'objet stocké dans notre token
+             * Ensuite la clé secrète
+             * Suivie d'un objet qui représentera nos options, ici l'expiration du token
              */
-            const rowCounts = await newUpdate.update()
-            // Gestion d'erreur
-            if (rowCounts === 0) {
-                throw new Error('Erreur lors de la mise à jour des informations utilisateur.')
-            }
-            res.status(200).json("Mise à jour du profil utilisateur effectuée.")
+            const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: "4h" });
+            return res.status(200).json({ token })
         } catch (error) {
-            res.status(409).json(error.message)
+            return res.status(500).json({ message: "Erreur serveur" })
         }
     },
-
-    // Route DELETE /api/users/:id
-    delete: async (req, res) => {
-        try {
-            const id = parseInt(req.params.id);
-            const user = await User.findById(id);
-            if (user === undefined) {
-                throw new Error("Aucune correspondance pour cette ID")
-            }
-            const deletedUser = new User(user)
-            const rowCounts = await deletedUser.delete()
-            if (rowCounts === 0) {
-                throw new Error("Erreur lors de la supression de l'utilisateur.")
-            }
-            return res.status(200).json("Suppression de l'utilisateur effectuée.")
-        } catch (error) {
-            res.status(409).json(error.message)
-        }
-    }
 }
 
 export default authController;
