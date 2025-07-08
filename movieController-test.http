@@ -1,0 +1,29 @@
+### Get genre by id
+GET  http://localhost:3000/api/genres/12
+Content-Type: application/json; charset=utf-8
+
+### Get all genres
+GET  http://localhost:3000/api/genres
+Content-Type: application/json; charset=utf-8
+
+
+### Create movie
+POST http://localhost:3000/api/genres
+Content-Type: application/json; charset=utf-8
+
+{
+"name" : "slasher"
+    }
+
+### Update movie
+PATCH http://localhost:3000/api/genres/5
+Content-Type: application/json; charset=utf-8
+
+{
+    "TMDB_id": 5110513,
+    "media_type": "tv"
+}
+
+### Delete movie
+DELETE http://localhost:3000/api/movies/5
+Content-Type: application/json; charset=utf-8
