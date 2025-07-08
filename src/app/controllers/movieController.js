@@ -67,42 +67,38 @@ const movieController = {
         try {
             // récupération de l'id dans les paramètres de la requête et conversion en entier
             const movieId = parseInt(req.params.id);
-            const movieById = await Movie.findById(movieId);
-                        console.log(movieById)
+            const movie = await Movie.findById(movieId);
+            // console.log(movie)
 
-            if (!movieById) {
+            if (!movie) {
                 res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
+
+            // const {prop} = req.body;
             // récupération des propriétés attendues depuis le corps de la requête qui ne contient que des strings
             // et conversion des valeurs numériques en entiers
-            function copyProps(props, src, target = {}) {
-    for (let prop of props) {
-        if (src[prop] !== null) {
-            target[prop] === src[prop];
-        }
-    }
-    return target;
-    console.log(target)
-}
-
-
-const newProps = ["TMDB_id", "title", "overview", "poster_path", "media_type"];
-await Movie.update({
-    where: {
-        id: parseInt(movieById)
-    },
-    data: copyProps(newProps, req.body)
-})
+            // const TMDBId = parseInt(req.body.TMDB_id);
+            // const name = req.body.title;
+            // const abstract = req.body.overview;
+            // const posterPath = req.body.poster_path;
+            // const mediaType = req.body.media_type;
+            // console.log(TMDBId)   
+            // création d'une nouvelle instance de Movie avec les données reçues
+            // const movieToUpdate = { TMDB_id: TMDBId, title: `${name}`, overview: `${abstract}`, poster_path: `${posterPath}`, media_type: `${mediaType}` }
+// const movieToUpdate = (...movie, ...req.body)
+            // console.log(movieToUpdate)
+            const updatedMovie = Object.assign(movie, req.body)
+            console.log(updatedMovie)
             // appel à la méthode d'instance update() pour l'insertion dans la BDD
-            // const result = await updatedMovie.update();
-
+            const result = await updatedMovie.update();
+                                     
             // si result est false, alors affichage d'un message d'erreur avec le statut 304 correspondant à "not modified"
-            if (result === 0) {
+            if (result === 0) {      
                 return res.status(304).json({ error: "Modification non effectuée" });
-            }
+            }                        
             // renvoi du résultat au format JSON avec le statut 200 corespondant à "OK"
             return res.status(200).json({ message: "Film modifié avec succès", modified: result });
-        }
+        }                            
         // bloc catch, à exécuter en cas d'erreur dans le bloc try
         catch (error) {
             // affichage du message d'erreur avec le statut 500 correspondant à une erreur serveur interne
