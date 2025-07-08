@@ -21,6 +21,7 @@ const app = express();
 // Paramétrage de notre moteur de vue
 app.set('view engine', 'ejs');
 // Cheminement de nos vue renvoyé
+
 app.set('views', './src/app/views')
 
 // Initialisation des options des cors
