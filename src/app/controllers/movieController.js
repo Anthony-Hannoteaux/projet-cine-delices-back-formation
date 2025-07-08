@@ -92,8 +92,8 @@ const movieController = {
             // affichage du message d'erreur avec le statut 500 correspondant à une erreur serveur interne
             return res.status(500).json({ error: "Erreur lors de la modification du film" });
         }
-    },
-
+    },       
+             
     deleteMovie: async (req, res) => {
         try {
             // récupération de l'id dans les paramètres de la requête et conversion en entier
@@ -102,13 +102,14 @@ const movieController = {
             if (!movieById) {
                 res.status(404).json({ error: "L'id spécifié n'existe pas" })
             }
-            console.log(req.params.id)
+            // récupération de l'objet à partir de son index
+             const movie = movieById[0]
             // création de l'instance du film à supprimer
-            const movieToDelete = new Movie(movieById)
+            const movieToDelete = new Movie(movie)
             // appel de la méthode d'instance delete
             const deletedMovie = await movieToDelete.delete();
             res.status(200).json({ message: "Le film a bien été supprimé", removed: deletedMovie });
-        }
+        }    
         catch (error) {
             res.status(500).json({ error: "Erreur lors de la suppression du film" });
         }
