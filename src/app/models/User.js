@@ -13,8 +13,8 @@ class User {
         this.email = config.email;
         this.password = config.password;
         this.id = config.id;
-
     }
+    
     // mise en place des getters
     get username() {
         return this.#username;
@@ -34,8 +34,8 @@ class User {
 
     // mise en place des setteurs (mutateurs)
     set username(value) {
-        if (value.length > 32 || value.length < 1) {
-            throw new Error("Votre nom d'utilisateur doit contenir entre 1 et 32 caractères");
+        if (typeof value !== "string" && (value.length > 32 || value.length < 1)) {
+            throw new Error("Votre nom d'utilisateur doit obligatoirement être une chaîne de caractère entre 1 et 32.");
         }
         this.#username = value;
     }
@@ -50,6 +50,7 @@ class User {
     set password(value) {
         this.#password = value;
     }
+    
     set id(value) {
         this.#id = value;
     }
@@ -76,7 +77,16 @@ class User {
             WHERE id = $1`, [
             id
         ]);
-        return result.rows;
+        return result.rows[0];
+    }
+
+    // affiche l'enregistrement de l'email spécifié
+    static async findByEmail(email) {
+        const result = await client.query(`SELECT * FROM "user"
+            WHERE email = $1`, [
+            email
+        ]);
+        return result.rows[0];
     }
 
     // modification
