@@ -26,5 +26,5 @@ Content-Type: application/json; charset=utf-8
 }
 
 ### Delete genre
-DELETE http://localhost:3000/api/movies/5
+DELETE http://localhost:3000/api/genres/8
 Content-Type: application/json; charset=utf-8
