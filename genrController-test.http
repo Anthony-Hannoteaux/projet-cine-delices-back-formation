@@ -12,7 +12,7 @@ POST http://localhost:3000/api/genres
 Content-Type: application/json; charset=utf-8
 
 {
-"name": "slasher"
+    "name": "slasher"
     }
 
 ### Update genre
@@ -20,8 +20,9 @@ PATCH http://localhost:3000/api/genres/5
 Content-Type: application/json; charset=utf-8
 
 {
-    "TMDB_id": 5110513,
-    "media_type": "tv"
+
+    "name": "bollywood"
+
 }
 
 ### Delete genre
