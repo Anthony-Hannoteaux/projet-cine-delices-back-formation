@@ -8,6 +8,8 @@ import categoryController from "./controllers/categoryController.js";
 import recipeController from "./controllers/recipeController.js";
 import movieController from "./controllers/movieController.js";
 import stepController from "./controllers/stepController.js";
+import movieController from "./controllers/movieController.js";
+import authenticateUser from "./middlewares/authMiddleware.js";
 
 // Création de notre routeur express
 const router = express.Router();
@@ -36,10 +38,11 @@ router.post("/api/auth/login", authController.login)
 
 router.get("/catalogue", apiController.catalogue);
 
+
 // Routes backend
 
 // Créer une recette
-router.post("/api/recipes", upload.single("picture"), recipeController.createRecipe);
+router.post("/api/recipes", authenticateUser, upload.single("picture"), recipeController.createRecipe);
 // Récupérer toutes les recettes
 router.get('/api/recipes', recipeController.getAllRecipes);
 // Récupérer une recette par ID
