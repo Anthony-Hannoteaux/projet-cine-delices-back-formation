@@ -6,6 +6,7 @@ import apiController from "./controllers/apiController.js";
 import categoryController from "./controllers/categoryController.js";
 import recipeController from "./controllers/recipeController.js";
 import stepController from "./controllers/stepController.js";
+import movieController from "./controllers/movieController.js";
 import genreController from "./controllers/genreController.js";
 
 // Création de notre routeur express
@@ -31,6 +32,7 @@ router.delete("/api/users/:id", userController.delete);
 router.post("/api/auth/login", authController.login)
 
 router.get("/catalogue", apiController.catalogue);
+
 
 
 // ROUTES BACKEND
