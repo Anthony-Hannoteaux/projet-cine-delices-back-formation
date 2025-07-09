@@ -1,0 +1,30 @@
+### Get genre by id
+GET  http://localhost:3000/api/genres/12
+Content-Type: application/json; charset=utf-8
+
+### Get all genres
+GET  http://localhost:3000/api/genres
+Content-Type: application/json; charset=utf-8
+
+
+### Create genre
+POST http://localhost:3000/api/genres
+Content-Type: application/json; charset=utf-8
+
+{
+    "name": "slasher"
+    }
+
+### Update genre
+PATCH http://localhost:3000/api/genres/5
+Content-Type: application/json; charset=utf-8
+
+{
+
+    "name": "bollywood"
+
+}
+
+### Delete genre
+DELETE http://localhost:3000/api/genres/8
+Content-Type: application/json; charset=utf-8
