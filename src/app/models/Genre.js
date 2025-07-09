@@ -37,7 +37,7 @@ class Genre {
         const result = await client.query(`INSERT INTO "genre"
             ("name")
             VALUES ($1)`, [
-            this.#name,
+            this.#name
         ])
 
         // retourne le nombre d'enregistrements créés
