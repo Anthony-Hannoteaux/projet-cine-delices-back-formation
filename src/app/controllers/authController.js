@@ -12,12 +12,12 @@ const authController = {
             const user = await User.findByEmail(req.body.email)
             // Si aucun n'utilisateur n'a été créé avec cet email alors
             if (!user) {
-                // Message générique pour ne pas indiquer plus de précisions sur la donnée incorrecte 
-                return res.status(404).json({ message: "Couple identifiant/mot de passe incorrectes"})
+                // Message générique pour ne pas indiquer plus de précisions sur la donnée incorrecte
+                return res.status(404).json({ message: "Couple identifiant/mot de passe incorrect"})
             }
             const passwordMatched = await bcrypt.compare(req.body.password, user.password);
             if (!passwordMatched) {
-                return res.status(404).json({ message: "Couple identifiant/mot de passe incorrectes"})
+                return res.status(404).json({ message: "Couple identifiant/mot de passe incorrect"})
             }
             /**
              * Génération d'un token d'authentification
