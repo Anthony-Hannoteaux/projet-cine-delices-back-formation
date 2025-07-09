@@ -17,7 +17,6 @@ const recipeController = {
       const cook_time = parseInt(req.body.cook_time, 10) || 0;
 
       const story = req.body.story?.trim() || "";
-      //const user_id = parseInt(req.body.user_id, 10);
       const movie_id = parseInt(req.body.movie_id, 10);
 
       // Parse des tableaux envoyés en JSON en tableaux JavaScript réels
@@ -37,11 +36,15 @@ const recipeController = {
       const recette = new Recipe(
         null, title, description, difficulty, budget,
         servings, preparation_time, cook_time, story,
-        picture, /*user_id,*/ movie_id, category, ingredients, steps
+        picture, movie_id, category, ingredients, steps
       );
 
+      // On associe l'ID de l'utilisateur à la recette
+      // req.user est défini par le middleware d'authentification
       recette.user_id = req.user.id;
 
+      // Vérification de l'authentification de l'utilisateur
+      // Si l'utilisateur n'est pas authentifié, on renvoie une erreur 401
       if (!req.user || !req.user.id) {
         return res.status(401).json({ error: "Utilisateur non authentifié" });
       }

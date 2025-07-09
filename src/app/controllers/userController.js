@@ -42,6 +42,29 @@ const userController = {
         }
     },
 
+    // Route GET /api/users/me
+    getMe: async (req, res) => {
+        try {
+            // On récupère l'ID de l'utilisateur authentifié depuis le token JWT
+            const userId = req.user.id;
+            // On utilise la méthode findById pour récupérer l'utilisateur
+            const user = await User.findById(userId);
+            // Si l'utilisateur n'existe pas, on renvoie une erreur 404
+            if (!user) {
+                return res.status(404).json({ message: 'Utilisateur non trouvé' });
+            }
+            // On renvoie les informations de l'utilisateur
+            return res.status(200).json({
+                id: user.id,
+                username: user.username,
+                email: user.email,
+            });
+        } catch (error) {
+            // En cas d'erreur, on renvoie une erreur 500
+            return res.status(500).json({ message: 'Erreur serveur' });
+        }
+    },
+
     // Route POST /api/users
     createNewUser: async (req, res) => {
         try {

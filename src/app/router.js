@@ -8,7 +8,6 @@ import categoryController from "./controllers/categoryController.js";
 import recipeController from "./controllers/recipeController.js";
 import movieController from "./controllers/movieController.js";
 import stepController from "./controllers/stepController.js";
-import movieController from "./controllers/movieController.js";
 import authenticateUser from "./middlewares/authMiddleware.js";
 
 // Création de notre routeur express
@@ -25,6 +24,7 @@ router.get("/", mainController.home);
 router.get("/api/users", userController.getAllUser);
 router.get("/api/users/id/:id", userController.getUserById);
 router.get("/api/users/email/:email", userController.getUserByEmail);
+router.get("/api/users/me", authenticateUser, userController.getMe);
 // Route POST
 router.post("/api/users/", userController.createNewUser);
 // Route PATCH

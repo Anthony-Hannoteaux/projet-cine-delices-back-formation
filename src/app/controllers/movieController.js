@@ -149,9 +149,7 @@ const movieController = {
   autocomplete: async (req, res) => {
 
     // On extrait la query string search depuis l’URL
-    const {
-      search
-    } = req.query;
+    const { search } = req.query;
 
     // on bloque les recherches trop courtes ou absentes pour éviter des requêtes trop larges.
     if (!search || search.length < 2) {
