@@ -6,6 +6,7 @@ import apiController from "./controllers/apiController.js";
 import categoryController from "./controllers/categoryController.js";
 import recipeController from "./controllers/recipeController.js";
 import stepController from "./controllers/stepController.js";
+import movieController from "./controllers/movieController.js";
 
 // Création de notre routeur express
 const router = express.Router();
@@ -31,7 +32,10 @@ router.post("/api/auth/login", authController.login)
 
 router.get("/catalogue", apiController.catalogue);
 
+
 // Routes backend
+
+// RECETTES
 // Créer une recette
 router.post('/api/recipes', recipeController.createRecipe);
 
