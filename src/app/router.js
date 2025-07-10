@@ -51,6 +51,8 @@ router.post("/api/recipes", authenticateUser, upload.single("picture"), recipeCo
 router.get('/api/recipes', recipeController.getAllRecipes);
 // Récupérer une recette par ID
 router.get('/api/recipes/:id', recipeController.getOneRecipe);
+// Récupérer les recettes d'un utilisateur authentifié
+router.get("/api/my-recipes", authenticateUser, recipeController.getMyRecipes);
 // Modifier une recette par ID
 router.patch('/api/recipes/:id', recipeController.updateRecipe);
 // Supprimer une recette par ID

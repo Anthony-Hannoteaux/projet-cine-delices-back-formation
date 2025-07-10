@@ -266,6 +266,18 @@ class Recipe {
         const result = await client.query(query, [userId]);
         return parseInt(result.rows[0].count, 10);
     }
+
+    static async findLastPublicationDateByUserId(userId) {
+        const query = `
+            SELECT created_at
+            FROM recipe
+            WHERE user_id = $1
+            ORDER BY created_at DESC
+            LIMIT 1
+        `;
+        const result = await client.query(query, [userId]);
+        return result.rows[0]?.created_at || null;
+    }
 }
 
 // Exportation de la classe Recipe pour l'utiliser dans d'autres fichiers

@@ -56,30 +56,22 @@ const userController = {
                 return res.status(404).json({ message: 'Utilisateur non trouvé' });
             }
 
-            console.log("🔍 ID utilisateur reçu :", userId);
+            const publication_count = await Recipe.countByUserId(userId);
+            const last_publication_date = await Recipe.findLastPublicationDateByUserId(userId);
 
-            let publication_count = 0;
-            try {
-            publication_count = await Recipe.countByUserId(userId);
-            } catch (err) {
-            console.log("Nombre de publications :", publication_count);
-            console.error("Erreur lors du comptage des publications :", err);
-            }
-
-
-            // On renvoie les informations de l'utilisateur
-            return res.status(200).json({
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                created_at: user.created_at,
-                publication_count
+            res.status(200).json({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            created_at: user.created_at,
+            publication_count,
+            last_publication_date
             });
-        } catch (error) {
-            // En cas d'erreur, on renvoie une erreur 500
-            return res.status(500).json({ message: 'Erreur serveur' });
-        }
-    },
+                } catch (error) {
+                    // En cas d'erreur, on renvoie une erreur 500
+                    return res.status(500).json({ message: 'Erreur serveur' });
+                }
+            },
 
     // Route POST /api/users
     createNewUser: async (req, res) => {

@@ -1,3 +1,4 @@
+import client from '../database.js';
 import Recipe from '../models/Recipe.js';
 
 const recipeController = {
@@ -92,6 +93,33 @@ const recipeController = {
       res.status(500).json({ error: 'Erreur lors de la récupération de la recette' });
     }
   },
+
+  // Lire les recettes d'un utilisateur authentifié
+  getMyRecipes: async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const query = `
+      SELECT
+        recipe.title,
+        recipe.description,
+        recipe.difficulty,
+        recipe.budget,
+        recipe.created_at,
+        movie.title AS movie_title
+      FROM recipe
+      JOIN movie ON recipe.movie_id = movie.id
+      WHERE recipe.user_id = $1
+      ORDER BY recipe.created_at DESC;
+    `;
+    const result = await client.query(query, [userId]);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Erreur getMyRecipes:", error);
+    res.status(500).json({ error: "Erreur lors de la récupération des recettes" });
+  }
+},
 
   // Mettre à jour une recette
 updateRecipe: async (req, res) => {
