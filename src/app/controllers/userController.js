@@ -1,6 +1,8 @@
 import validator from "validator";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import Recipe from "../models/Recipe.js";
+
 
 const userController = {
     // Route GET /api/users
@@ -53,11 +55,25 @@ const userController = {
             if (!user) {
                 return res.status(404).json({ message: 'Utilisateur non trouvé' });
             }
+
+            console.log("🔍 ID utilisateur reçu :", userId);
+
+            let publication_count = 0;
+            try {
+            publication_count = await Recipe.countByUserId(userId);
+            } catch (err) {
+            console.log("Nombre de publications :", publication_count);
+            console.error("Erreur lors du comptage des publications :", err);
+            }
+
+
             // On renvoie les informations de l'utilisateur
             return res.status(200).json({
                 id: user.id,
                 username: user.username,
                 email: user.email,
+                created_at: user.created_at,
+                publication_count
             });
         } catch (error) {
             // En cas d'erreur, on renvoie une erreur 500
@@ -88,7 +104,8 @@ const userController = {
             const newUser = new User({
                 username: req.body.username,
                 password: hash,
-                email: req.body.email
+                email: req.body.email,
+                created_at: new Date()
             })
             await newUser.create()
             return res.status(201).json("Nouvel utilisateur enregistré avec succès")

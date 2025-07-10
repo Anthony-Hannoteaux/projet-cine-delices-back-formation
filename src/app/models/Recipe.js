@@ -260,6 +260,12 @@ class Recipe {
         // Retourne le nombre de lignes supprimées
         return result.rowCount;
     }
+
+    static async countByUserId(userId) {
+        const query = `SELECT COUNT(*) FROM recipe WHERE user_id = $1`;
+        const result = await client.query(query, [userId]);
+        return parseInt(result.rows[0].count, 10);
+    }
 }
 
 // Exportation de la classe Recipe pour l'utiliser dans d'autres fichiers
