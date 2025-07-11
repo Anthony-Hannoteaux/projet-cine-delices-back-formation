@@ -20,6 +20,8 @@ CREATE TABLE "user" (
     "email" VARCHAR(32) UNIQUE NOT NULL,
     -- Utilisation d'un type TEXT pour ne pas limiter le nombre de caractère enregistré pour cette colonne
     "password" TEXT NOT NULL
+    -- "created_at" est une colonne de type TIMESTAMP qui enregistre la date et l'heure de création de l'utilisateur
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "genre" (
@@ -60,6 +62,7 @@ CREATE TABLE "recipe" (
     "picture" TEXT UNIQUE,
     "user_id" INTEGER REFERENCES "user"("id") NOT NULL,
     "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "recipe_has_category" (

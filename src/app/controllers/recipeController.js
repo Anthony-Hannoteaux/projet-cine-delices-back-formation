@@ -1,33 +1,69 @@
+import client from '../database.js';
 import Recipe from '../models/Recipe.js';
 
 const recipeController = {
   // Créer une nouvelle recette
   createRecipe: async (req, res) => {
-    // On récupère les propriétés attendues depuis le body de la requête
     try {
-      const {
-        title, description, difficulty, budget, servings,
-        preparation_time, cook_time, story, picture,
-        user_id, movie_id
-      } = req.body;
+      // Extraction et conversion des champs du body
+      const title = req.body.title?.trim();
+      const description = req.body.description?.trim();
+      const difficulty = req.body.difficulty;
+      const budget = req.body.budget;
+      const category = req.body.category;
 
-      // On instancie une nouvelle recette avec les données reçues
+      // Les valeurs numériques sont converties avec parseInt(...) car req.body contient tout sous forme de chaînes
+      const servings = parseInt(req.body.servings, 10) || 1;
+      const preparation_time = parseInt(req.body.preparation_time, 10) || 0;
+      const cook_time = parseInt(req.body.cook_time, 10) || 0;
+
+      const story = req.body.story?.trim() || "";
+      const movie_id = parseInt(req.body.movie_id, 10);
+
+      // Parse des tableaux envoyés en JSON en tableaux JavaScript réels
+      // Cela permet d’enregistrer plusieurs lignes
+      const ingredients = JSON.parse(req.body.ingredients);
+      const steps = JSON.parse(req.body.steps);
+
+      // Gestion du fichier image
+      // Grâce à multer, l’image est interceptée comme un fichier
+      // On extrait le nom du fichier pour pouvoir le stocker en BDD
+      let picture = null;
+      if (req.file) {
+        picture = req.file.filename;
+      }
+
+      // Instanciation de la recette
       const recette = new Recipe(
         null, title, description, difficulty, budget,
         servings, preparation_time, cook_time, story,
-        picture, user_id, movie_id
+        picture, movie_id, category, ingredients, steps
       );
 
-      // On appelle la méthode d’instance create() pour insérer la recette en base
+      // On associe l'ID de l'utilisateur à la recette
+      // req.user est défini par le middleware d'authentification
+      recette.user_id = req.user.id;
+
+      // Vérification de l'authentification de l'utilisateur
+      // Si l'utilisateur n'est pas authentifié, on renvoie une erreur 401
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ error: "Utilisateur non authentifié" });
+      }
+
+      // Insertion en BDD
       const result = await recette.create();
-      // Renvoi des recettes au format JSON
-      res.status(201).json({ message: 'Recette créée avec succès', inserted: result });
-      // Gestion d'erreur
+
+      res.status(201).json({
+        message: 'Recette créée avec succès',
+        inserted: result
+      });
+
     } catch (error) {
-      console.error('createRecipe:', error);
-      res.status(500).json({ error: 'Erreur lors de la création de la recette' });
+      console.error("Erreur createRecipe:", error);
+      res.status(500).json({ error: error.message || "Erreur lors de la création de la recette" });
     }
   },
+
 
   // Lire toutes les recettes
   getAllRecipes: async (req, res) => {
@@ -57,6 +93,33 @@ const recipeController = {
       res.status(500).json({ error: 'Erreur lors de la récupération de la recette' });
     }
   },
+
+  // Lire les recettes d'un utilisateur authentifié
+  getMyRecipes: async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const query = `
+      SELECT
+        recipe.title,
+        recipe.description,
+        recipe.difficulty,
+        recipe.budget,
+        recipe.created_at,
+        movie.title AS movie_title
+      FROM recipe
+      JOIN movie ON recipe.movie_id = movie.id
+      WHERE recipe.user_id = $1
+      ORDER BY recipe.created_at DESC;
+    `;
+    const result = await client.query(query, [userId]);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Erreur getMyRecipes:", error);
+    res.status(500).json({ error: "Erreur lors de la récupération des recettes" });
+  }
+},
 
   // Mettre à jour une recette
 updateRecipe: async (req, res) => {

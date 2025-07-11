@@ -16,7 +16,7 @@ class Recipe {
     #movie_id;
 
 
-    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id) {
+    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, /*user_id,*/ movie_id) {
         // Initialisation des attributs de la classe Recipe
         this.id = id;
         this.title = title;
@@ -28,7 +28,7 @@ class Recipe {
         this.cook_time = cook_time;
         this.story = story;
         this.picture = picture;
-        this.user_id = user_id;
+        /*this.user_id = user_id;*/
         this.movie_id = movie_id;
     }
 
@@ -117,9 +117,6 @@ class Recipe {
         return this.#story;
     }
     set story(value) {
-        if (typeof value !== 'string' || value.trim() === '') {
-            throw new Error('L\'histoire doit être une chaîne de caractères non vide.');
-        }
         this.#story = value;
     }
 
@@ -128,9 +125,6 @@ class Recipe {
         return this.#picture;
     }
     set picture(value) {
-        if (typeof value !== 'string' || value.trim() === '') {
-            throw new Error('La photo doit être une chaîne de caractères non vide.');
-        }
         this.#picture = value;
     }
 
@@ -265,6 +259,24 @@ class Recipe {
         
         // Retourne le nombre de lignes supprimées
         return result.rowCount;
+    }
+
+    static async countByUserId(userId) {
+        const query = `SELECT COUNT(*) FROM recipe WHERE user_id = $1`;
+        const result = await client.query(query, [userId]);
+        return parseInt(result.rows[0].count, 10);
+    }
+
+    static async findLastPublicationDateByUserId(userId) {
+        const query = `
+            SELECT created_at
+            FROM recipe
+            WHERE user_id = $1
+            ORDER BY created_at DESC
+            LIMIT 1
+        `;
+        const result = await client.query(query, [userId]);
+        return result.rows[0]?.created_at || null;
     }
 }
 

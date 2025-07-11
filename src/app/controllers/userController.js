@@ -1,6 +1,8 @@
 import validator from "validator";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import Recipe from "../models/Recipe.js";
+
 
 const userController = {
     // Route GET /api/users
@@ -42,6 +44,35 @@ const userController = {
         }
     },
 
+    // Route GET /api/users/me
+    getMe: async (req, res) => {
+        try {
+            // On récupère l'ID de l'utilisateur authentifié depuis le token JWT
+            const userId = req.user.id;
+            // On utilise la méthode findById pour récupérer l'utilisateur
+            const user = await User.findById(userId);
+            // Si l'utilisateur n'existe pas, on renvoie une erreur 404
+            if (!user) {
+                return res.status(404).json({ message: 'Utilisateur non trouvé' });
+            }
+
+            const publication_count = await Recipe.countByUserId(userId);
+            const last_publication_date = await Recipe.findLastPublicationDateByUserId(userId);
+
+            res.status(200).json({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            created_at: user.created_at,
+            publication_count,
+            last_publication_date
+            });
+                } catch (error) {
+                    // En cas d'erreur, on renvoie une erreur 500
+                    return res.status(500).json({ message: 'Erreur serveur' });
+                }
+            },
+
     // Route POST /api/users
     createNewUser: async (req, res) => {
         try {
@@ -65,7 +96,8 @@ const userController = {
             const newUser = new User({
                 username: req.body.username,
                 password: hash,
-                email: req.body.email
+                email: req.body.email,
+                created_at: new Date()
             })
             await newUser.create()
             return res.status(201).json("Nouvel utilisateur enregistré avec succès")
