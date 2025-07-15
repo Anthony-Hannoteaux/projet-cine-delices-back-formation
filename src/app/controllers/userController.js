@@ -64,6 +64,7 @@ const userController = {
             username: user.username,
             email: user.email,
             created_at: user.created_at,
+            is_active: user.is_active,
             publication_count,
             last_publication_date
             });
@@ -161,6 +162,7 @@ const userController = {
         try {
             const id = parseInt(req.params.id);
             const user = await User.findById(id);
+
             if (user === undefined) {
                 return res.status(404).json({ message: 'Aucune correspondance pour cette ID' })
             }
