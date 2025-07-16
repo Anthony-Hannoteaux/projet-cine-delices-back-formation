@@ -3,19 +3,25 @@ import client from "../database.js";
 // initialisation de la classe User
 class User {
     // initialisation des propriétés privées
+    #id;
     #username;
     #email;
     #password;
-    #id;
+    #is_active;
 
     constructor(config) {
+        this.id = config.id;
         this.username = config.username;
         this.email = config.email;
         this.password = config.password;
-        this.id = config.id;
+        this.is_active = config.is_active;
     }
     
     // mise en place des getters
+    get id() {
+        return this.#id;
+    }
+
     get username() {
         return this.#username;
     }
@@ -28,11 +34,16 @@ class User {
         return this.#password;
     }
 
-    get id() {
-        return this.#id;
-    }
+      get is_active() {
+    return this.#is_active;
+  }
+
 
     // mise en place des setteurs (mutateurs)
+    set id(value) {
+        this.#id = value;
+    }
+
     set username(value) {
         if (typeof value !== "string" && (value.length > 32 || value.length < 1)) {
             throw new Error("Votre nom d'utilisateur doit obligatoirement être une chaîne de caractère entre 1 et 32.");
@@ -51,9 +62,9 @@ class User {
         this.#password = value;
     }
     
-    set id(value) {
-        this.#id = value;
-    }
+      set is_active(value) {
+    this.#is_active = value;
+  }
 
     // mise en place du CRUD via le design pattern active record
     async create() {
@@ -91,27 +102,38 @@ class User {
 
     // modification
     async update() {
+        try {
         const result = await client.query(`UPDATE "user"
             SET
-            "username" = $1,
-            "email" = $2,
-            "password" = $3
-            WHERE "id"= $4`, [
+                "username" = $1,
+                "email" = $2,
+                "password" = $3,
+                "is_active" = $4
+            WHERE "id"= $5`, [
             this.#username,
             this.#email,
             this.#password,
+            this.#is_active,
             this.#id
         ])
         return result.rowCount;
-    }
+    } catch (error) {
+  console.error("Erreur SQL UPDATE :", error);
+  throw error;
+}}
 
     // suppression d'un enregistrement à partir de l'id
     async delete() {
-        const result = await client.query(`DELETE FROM "user"
-            WHERE "id" = $1`, [
-            this.#id
-        ])
-        return result.rowCount;
+        try {
+            const result = await client.query(
+            `DELETE FROM "user" WHERE "id" = $1`,
+            [this.#id]
+            );
+            return result.rowCount;
+        } catch (error) {
+            console.error("Erreur SQL lors de la suppression :", error);
+            throw error;
+        }
     }
 };
 

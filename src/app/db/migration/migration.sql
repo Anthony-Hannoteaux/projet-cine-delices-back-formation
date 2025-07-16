@@ -19,9 +19,11 @@ CREATE TABLE "user" (
     "username" VARCHAR(32) UNIQUE NOT NULL,
     "email" VARCHAR(32) UNIQUE NOT NULL,
     -- Utilisation d'un type TEXT pour ne pas limiter le nombre de caractère enregistré pour cette colonne
-    "password" TEXT NOT NULL
+    "password" TEXT NOT NULL,
     -- "created_at" est une colonne de type TIMESTAMP qui enregistre la date et l'heure de création de l'utilisateur
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    -- Indique si l'utilisateur est actif ou non
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL
 );
 
 CREATE TABLE "genre" (
@@ -60,8 +62,8 @@ CREATE TABLE "recipe" (
     "cook_time" INTEGER NOT NULL,
     "story" TEXT UNIQUE,
     "picture" TEXT UNIQUE,
-    "user_id" INTEGER REFERENCES "user"("id") NOT NULL,
-    "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE
+    "user_id" INTEGER REFERENCES "user"("id") NOT NULL ON DELETE CASCADE,
+    "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 

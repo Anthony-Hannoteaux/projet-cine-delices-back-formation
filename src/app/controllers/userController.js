@@ -64,6 +64,7 @@ const userController = {
             username: user.username,
             email: user.email,
             created_at: user.created_at,
+            is_active: user.is_active,
             publication_count,
             last_publication_date
             });
@@ -118,6 +119,21 @@ const userController = {
             if (user === undefined) {
                 return res.status(404).json({ message: 'Aucune correspondance pour cette ID' })
             }
+
+            // Si un mot de passe est fourni dans la requête, on le valide et on le hache
+            if (req.body.password) {
+            const options = { minLength: 12, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 };
+
+            if (!validator.isStrongPassword(req.body.password, options)) {
+                return res.status(409).json({
+                message: "Le mot de passe doit comporter au moins 12 caractères et contenir une majuscule, une minuscule, un chiffre et un caractère spécial"
+                });
+            }
+
+            const hash = await bcrypt.hash(req.body.password, 10);
+            req.body.password = hash;
+            }
+            
             /**
              * On aura donc besoin de l'objet user et des valeurs du corps de la requête
              * Nous utiliserons le spred operator ``...``
@@ -146,6 +162,7 @@ const userController = {
         try {
             const id = parseInt(req.params.id);
             const user = await User.findById(id);
+
             if (user === undefined) {
                 return res.status(404).json({ message: 'Aucune correspondance pour cette ID' })
             }
