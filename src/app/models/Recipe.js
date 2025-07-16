@@ -16,7 +16,7 @@ class Recipe {
     #movie_id;
 
 
-    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, /*user_id,*/ movie_id) {
+    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, movie_id) {
         // Initialisation des attributs de la classe Recipe
         this.id = id;
         this.title = title;
@@ -28,7 +28,6 @@ class Recipe {
         this.cook_time = cook_time;
         this.story = story;
         this.picture = picture;
-        /*this.user_id = user_id;*/
         this.movie_id = movie_id;
     }
 
@@ -175,7 +174,14 @@ class Recipe {
     // Utilisation de la méthode client
     // .query pour sélectionner les données de la table "recipes"
     static async findAll() {
-        const result = await client.query(`SELECT * FROM "recipe"`);
+          const result = await client.query(`
+            SELECT
+            recipe.*,
+            "user"."username" AS author_username
+            FROM "recipe"
+            JOIN "user" ON "user"."id" = recipe."user_id"
+            ORDER BY recipe.created_at DESC
+        `);
         // Retourne un tableau d'instances de la classe Recipe
         return result.rows;
     }
