@@ -31,6 +31,23 @@ class Recipe {
         this.movie_id = movie_id;
     }
 
+      toJSON() {
+    return {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      difficulty: this.difficulty,
+      budget: this.budget,
+      servings: this.servings,
+      preparation_time: this.preparation_time,
+      cook_time: this.cook_time,
+      story: this.story,
+      picture: this.picture,
+      user_id: this.user_id,
+      movie_id: this.movie_id,
+    };
+  }
+
     // Getters pour accéder aux attributs privés
     get id() {
         return this.#id;

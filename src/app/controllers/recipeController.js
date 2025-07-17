@@ -92,7 +92,7 @@ const recipeController = {
     }
   },
 
-  // 📘 Lire une recette par ID (meme construction que getAllRecipes)
+  // Lire une recette par ID (meme construction que getAllRecipes)
   getOneRecipe: async (req, res) => {
     try {
       const recipeId = parseInt(req.params.id, 10);
