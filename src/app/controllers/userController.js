@@ -175,7 +175,22 @@ const userController = {
         } catch (error) {
             return res.status(500).json({ message: 'Erreur serveur' })
         }
+    },
+
+    getAverageRatingByUser: async (req, res) => {
+        try {
+            const userId = req.params.id;
+            const average_rating = await Recipe.getAverageRatingByUserId(userId);
+
+            console.log("Donnée reçue de Recipe.getAverageRatingByUserId :", average_rating);
+            res.json({ average_rating });
+
+
+        } catch (error) {
+            console.error("Erreur getAverageRatingByUser :", error);
+            res.status(500).json({ error: "Erreur serveur." });
+        }
     }
-}
+};
 
 export default userController;

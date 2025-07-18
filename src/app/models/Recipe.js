@@ -190,25 +190,46 @@ class Recipe {
     // Utilisation de la méthode db.query pour insérer les données dans la table "recipes"
     // Les paramètres de la requête sont passés sous forme de tableau
     async create() {
-        const result = await client.query('INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-            [
-                this.title,
-                this.description,
-                this.difficulty,
-                this.budget,
-                this.servings,
-                this.preparation_time,
-                this.cook_time,
-                this.story,
-                this.picture,
-                this.user_id,
-                this.movie_id
-            ]
+    try {
+        // 1. Insérer la recette
+        const result = await client.query(
+        `INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING id`,
+        [
+            this.title,
+            this.description,
+            this.difficulty,
+            this.budget,
+            this.servings,
+            this.preparation_time,
+            this.cook_time,
+            this.story,
+            this.picture,
+            this.user_id,
+            this.movie_id
+        ]
         );
 
-        // Retourne le nombre d'enregistrements insérés
-        return result.rowCount;
+        const recipeId = result.rows[0].id;
+
+        // 2. Insérer les étapes
+        if (this.steps && Array.isArray(this.steps)) {
+        for (let i = 0; i < this.steps.length; i++) {
+            await client.query(
+            `INSERT INTO step (content, position, recipe_id) VALUES ($1, $2, $3)`,
+            [this.steps[i], i + 1, recipeId]
+            );
+        }
+        }
+
+        return recipeId;
+    } catch (error) {
+        console.error("Erreur createRecipe:", error);
+        throw error;
     }
+    }
+
 
     // Méthode pour trouver toutes les recettes
     // Méthode asynchrone pour récupérer toutes les recettes
@@ -339,6 +360,22 @@ class Recipe {
         const result = await client.query(query, [userId]);
         return result.rows[0]?.created_at || null;
     }
+
+    static async getAverageRatingByUserId(userId) {
+        const query = `
+            SELECT
+            CASE
+                WHEN SUM(recipe.rating_count) = 0 THEN 0
+                ELSE ROUND(SUM(recipe.rating_sum)::numeric / SUM(recipe.rating_count), 2)
+            END AS average_rating
+            FROM recipe
+            WHERE recipe.user_id = $1
+        `;
+        const result = await client.query(query, [userId]);
+        console.log("Résultat brut de la requête :", result);
+        return parseFloat(result.rows[0].average_rating);
+        }
+
 }
 
 // Exportation de la classe Recipe pour l'utiliser dans d'autres fichiers
