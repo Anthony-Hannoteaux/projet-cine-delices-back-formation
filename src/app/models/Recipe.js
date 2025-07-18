@@ -10,13 +10,14 @@ class Recipe {
     #servings;
     #preparation_time;
     #cook_time;
+    #steps;
     #story;
     #picture;
     #user_id;
     #movie_id;
 
 
-    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, /*user_id,*/ movie_id) {
+    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, steps, story, picture, movie_id) {
         // Initialisation des attributs de la classe Recipe
         this.id = id;
         this.title = title;
@@ -26,10 +27,29 @@ class Recipe {
         this.servings = servings;
         this.preparation_time = preparation_time;
         this.cook_time = cook_time;
+        this.steps = steps;
         this.story = story;
         this.picture = picture;
-        /*this.user_id = user_id;*/
         this.movie_id = movie_id;
+    }
+
+    toJSON() {
+        // Méthode pour convertir l'instance de la classe Recipe en objet JSON (sinon les données ne seront pas sérialisées correctement)
+        return {
+        id: this.id,
+        title: this.title,
+        description: this.description,
+        difficulty: this.difficulty,
+        budget: this.budget,
+        servings: this.servings,
+        preparation_time: this.preparation_time,
+        cook_time: this.cook_time,
+        steps: this.steps,
+        story: this.story,
+        picture: this.picture,
+        user_id: this.user_id,
+        movie_id: this.movie_id,
+        };
     }
 
     // Getters pour accéder aux attributs privés
@@ -112,6 +132,14 @@ class Recipe {
         this.#cook_time = value;
     }
 
+    // Getters et setters pour les étapes de la recette
+    get steps() {
+        return this.#steps;
+    }
+    set steps(value) {
+        this.#steps = value;
+    }
+
     // Getters et setters pour l'anecdote liée au film
     get story() {
         return this.#story;
@@ -175,7 +203,14 @@ class Recipe {
     // Utilisation de la méthode client
     // .query pour sélectionner les données de la table "recipes"
     static async findAll() {
-        const result = await client.query(`SELECT * FROM "recipe"`);
+          const result = await client.query(`
+            SELECT
+            recipe.*,
+            "user"."username" AS author_username
+            FROM "recipe"
+            JOIN "user" ON "user"."id" = recipe."user_id"
+            ORDER BY recipe.created_at DESC
+        `);
         // Retourne un tableau d'instances de la classe Recipe
         return result.rows;
     }
@@ -187,10 +222,12 @@ class Recipe {
     // .query pour sélectionner les données de la table "recipes"
     // Le paramètre de la requête est passé sous forme de tableau
     static async findById(id) {
-        const result = await client.query(`SELECT recipe.*, "user".username, "user".email, "user".password
+        const result = await client.query(`SELECT recipe.*, "user".username, "user".email, "user".password, json_agg(json_build_object('number', step.number, 'description', step.description)) AS steps
         FROM recipe
         JOIN "user" ON recipe.user_id = "user".id
-        WHERE recipe.id = $1`, [id]);
+        LEFT JOIN step ON recipe.id = step.recipe_id
+        WHERE recipe.id = $1
+        GROUP BY recipe.id, "user".username, "user".email, "user".password`, [id]);
 
         // Vérifie si une recette a été trouvée
         const recipeData = result.rows[0];
@@ -210,6 +247,7 @@ class Recipe {
             recipeData.servings,
             recipeData.preparation_time,
             recipeData.cook_time,
+            recipeData.steps,
             recipeData.story,
             recipeData.picture,
             recipeData.user_id,

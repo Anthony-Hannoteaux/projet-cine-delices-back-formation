@@ -7,6 +7,6 @@ INSERT INTO "user" ("username", "email", "password") VALUES
     ('chef2', 'chef2@hotmail.fr', 'password2'),
     ('chef3', 'chef3@hotmail.fr', 'password3'),
     ('chef4', 'chef4@hotmail.fr', 'password4'),
-    ('chef5', 'chef5@hotmail.fr', 'password5'),
+    ('chef5', 'chef5@hotmail.fr', 'password5');
 
 COMMIT;

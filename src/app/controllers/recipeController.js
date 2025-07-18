@@ -70,8 +70,21 @@ const recipeController = {
     try {
         // Appel à la méthode statique findAll() du modèle Recipe
       const recipes = await Recipe.findAll();
-      // Renvoi des recettes au format JSON
-      res.status(200).json(recipes);
+      // on stocke dans une variable la liste des recettes
+      const enhancedRecipes = recipes.map((recipe) => {
+        const isFullUrl = recipe.picture.startsWith("http://") || recipe.picture.startsWith("https://");
+      return {
+        // On enrichit chaque recette avec l'URL de la photo
+        ...recipe,
+        // Si l'URL de la photo est déjà complète, on l'utilise telle quelle (cas des images stockées en BDD lors du seeding initial)
+        picture_url: isFullUrl
+          // Sinon, on la construit avec le chemin local (cas des images uploadées par les utilisateurs)
+          ? recipe.picture
+          : `http://localhost:3000/uploads/${recipe.picture}`
+      };
+    });
+      // On renvoie les recettes enrichies au format JSON
+      res.status(200).json(enhancedRecipes);
       // Gestion d'erreur
     } catch (error) {
       console.error(' getAllRecipes:', error);
@@ -79,7 +92,7 @@ const recipeController = {
     }
   },
 
-  // 📘 Lire une recette par ID (meme construction que getAllRecipes)
+  // Lire une recette par ID (meme construction que getAllRecipes)
   getOneRecipe: async (req, res) => {
     try {
       const recipeId = parseInt(req.params.id, 10);

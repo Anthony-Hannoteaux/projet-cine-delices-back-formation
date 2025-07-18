@@ -62,7 +62,7 @@ CREATE TABLE "recipe" (
     "cook_time" INTEGER NOT NULL,
     "story" TEXT UNIQUE,
     "picture" TEXT UNIQUE,
-    "user_id" INTEGER REFERENCES "user"("id") NOT NULL ON DELETE CASCADE,
+    "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );

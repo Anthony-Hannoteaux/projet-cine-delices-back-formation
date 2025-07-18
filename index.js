@@ -38,6 +38,9 @@ app.use(express.json());
 // Appel du router de notre application
 app.use(router);
 
+// Permet de servir statiquement les fichiers depuis le dossier "uploads"
+app.use("/uploads", express.static("uploads"));
+
 // Appel de notre port d'écoute
 const port = process.env.PORT || 3000
 
