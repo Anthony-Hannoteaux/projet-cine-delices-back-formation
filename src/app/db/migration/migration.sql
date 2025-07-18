@@ -64,7 +64,9 @@ CREATE TABLE "recipe" (
     "picture" TEXT UNIQUE,
     "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "movie_id" INTEGER REFERENCES "movie"("id") ON DELETE CASCADE,
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "rating_sum" NUMERIC DEFAULT 0,
+    "rating_count" INTEGER DEFAULT 0
 );
 
 CREATE TABLE "recipe_has_category" (
