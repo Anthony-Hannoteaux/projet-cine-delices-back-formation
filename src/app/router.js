@@ -11,6 +11,7 @@ import movieController from "./controllers/movieController.js";
 import stepController from "./controllers/stepController.js";
 import genreController from "./controllers/genreController.js";
 import ratingController from "./controllers/ratingController.js";
+import searchController from "./controllers/searchController.js";
 
 import authenticateUser from "./middlewares/authMiddleware.js";
 
@@ -27,6 +28,8 @@ router.get("/", mainController.home);
 router.post("/api/auth/login", authController.login)
 
 router.get("/catalogue", apiController.catalogue);
+
+router.get("/api/search", searchController.searchAll);
 
 
     //USERS
