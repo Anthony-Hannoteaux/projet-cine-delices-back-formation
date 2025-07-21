@@ -96,7 +96,9 @@ const recipeController = {
   getOneRecipe: async (req, res) => {
     try {
       const recipeId = parseInt(req.params.id, 10);
+      console.log("ID reçu pour getOneRecipe :", req.params.id);
       const recipe = await Recipe.findById(recipeId);
+
       if (!recipe) {
         return res.status(404).json({ error: 'Recette non trouvée' });
       }

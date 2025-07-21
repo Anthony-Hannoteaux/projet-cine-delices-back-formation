@@ -10,6 +10,7 @@ import recipeController from "./controllers/recipeController.js";
 import movieController from "./controllers/movieController.js";
 import stepController from "./controllers/stepController.js";
 import genreController from "./controllers/genreController.js";
+import ratingController from "./controllers/ratingController.js";
 
 import authenticateUser from "./middlewares/authMiddleware.js";
 
@@ -57,6 +58,8 @@ router.get("/api/my-recipes", authenticateUser, recipeController.getMyRecipes);
 router.patch('/api/recipes/:id', recipeController.updateRecipe);
 // Supprimer une recette par ID
 router.delete('/api/recipes/:id', recipeController.deleteRecipe);
+// Noter une recette
+router.post("/api/recipes/:id/rate", authenticateUser, ratingController.rateRecipe);
 
     //MOVIES
 // Autocomplétion des films (pour le formulaire d'ajout de recette)

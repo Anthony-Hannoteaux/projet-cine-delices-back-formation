@@ -15,9 +15,10 @@ class Recipe {
     #picture;
     #user_id;
     #movie_id;
+    #average_rating;
 
 
-    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, steps, story, picture, movie_id) {
+    constructor(id, title, description, difficulty, budget, servings, preparation_time, cook_time, steps, story, picture, user_id, movie_id, average_rating) {
         // Initialisation des attributs de la classe Recipe
         this.id = id;
         this.title = title;
@@ -30,7 +31,9 @@ class Recipe {
         this.steps = steps;
         this.story = story;
         this.picture = picture;
+        this.user_id = user_id;
         this.movie_id = movie_id;
+        this.average_rating = average_rating;
     }
 
     toJSON() {
@@ -49,6 +52,7 @@ class Recipe {
         picture: this.picture,
         user_id: this.user_id,
         movie_id: this.movie_id,
+        average_rating: this.average_rating,
         };
     }
 
@@ -172,6 +176,14 @@ class Recipe {
         this.#movie_id = value;
     }
 
+    // Getters et setters pour la note moyenne
+    get average_rating() {
+        return this.#average_rating;
+    }
+    set average_rating(value) {
+        this.#average_rating = value;
+    }
+
 
     // Ajout d'une recette dans la base de données
     // Méthode asynchrone pour créer une recette
@@ -215,19 +227,29 @@ class Recipe {
         return result.rows;
     }
 
-
-    // Retourne une recette par son ID
-    // Méthode asynchrone pour récupérer une recette par son ID
-    // Utilisation de la méthode client
-    // .query pour sélectionner les données de la table "recipes"
-    // Le paramètre de la requête est passé sous forme de tableau
+    // Méthode statique pour trouver une recette par son ID
     static async findById(id) {
-        const result = await client.query(`SELECT recipe.*, "user".username, "user".email, "user".password, json_agg(json_build_object('number', step.number, 'description', step.description)) AS steps
-        FROM recipe
-        JOIN "user" ON recipe.user_id = "user".id
-        LEFT JOIN step ON recipe.id = step.recipe_id
-        WHERE recipe.id = $1
-        GROUP BY recipe.id, "user".username, "user".email, "user".password`, [id]);
+  /**
+   * Cette requête récupère une recette complète par son ID.
+   * Elle inclut :
+   * - Toutes les colonnes de la table `recipe`
+   * - Les informations de l'utilisateur qui a créé la recette (`username`, `email`)
+   * - Les étapes de préparation, agrégées en un tableau JSON
+   * - La note moyenne calculée dynamiquement à partir de `rating_sum` et `rating_count`
+   */
+  const result = await client.query(`
+    SELECT recipe.*, "user".username, "user".email,
+      json_agg(json_build_object('number', step.number, 'description', step.description)) AS steps,
+      CASE
+        WHEN recipe.rating_count = 0 THEN 0
+        ELSE ROUND(recipe.rating_sum::numeric / recipe.rating_count, 2)
+      END AS average_rating
+    FROM recipe
+    JOIN "user" ON recipe.user_id = "user".id
+    LEFT JOIN step ON recipe.id = step.recipe_id
+    WHERE recipe.id = $1
+    GROUP BY recipe.id, "user".username, "user".email
+  `, [id]);
 
         // Vérifie si une recette a été trouvée
         const recipeData = result.rows[0];
@@ -251,7 +273,8 @@ class Recipe {
             recipeData.story,
             recipeData.picture,
             recipeData.user_id,
-            recipeData.movie_id
+            recipeData.movie_id,
+            recipeData.average_rating
         );
     }
 
