@@ -11,6 +11,7 @@ import movieController from "./controllers/movieController.js";
 import stepController from "./controllers/stepController.js";
 import genreController from "./controllers/genreController.js";
 import ratingController from "./controllers/ratingController.js";
+import searchController from "./controllers/searchController.js";
 
 import authenticateUser from "./middlewares/authMiddleware.js";
 
@@ -28,6 +29,8 @@ router.post("/api/auth/login", authController.login)
 
 router.get("/catalogue", apiController.catalogue);
 
+router.get("/api/search", searchController.searchAll);
+
 
     //USERS
 // Créer un utilisateur
@@ -44,6 +47,9 @@ router.get("/api/users/me", authenticateUser, userController.getMe);
 router.patch("/api/users/:id", userController.updateUser);
 // Supprimer un utilisateur
 router.delete("/api/users/:id", userController.delete);
+// Récupérer la note moyenne des publications d'un utilisateur
+router.get('/api/users/:id/average-rating', userController.getAverageRatingByUser);
+
 
     //RECETTES
 // Créer une recette
@@ -60,10 +66,24 @@ router.patch('/api/recipes/:id', recipeController.updateRecipe);
 router.delete('/api/recipes/:id', recipeController.deleteRecipe);
 // Noter une recette
 router.post("/api/recipes/:id/rate", authenticateUser, ratingController.rateRecipe);
+// Récupérer les recettes par catégorie
+router.get("/api/recipes/category/:name", recipeController.getByCategory);
 
     //MOVIES
+// Ajouter un film
+router.post("/api/movies", movieController.createMovie);
+// Récupérer tous les films
+router.get("/api/movies", movieController.getAllMovies);
+// Récupérer un film par son ID
+router.get("/api/movies/:id", movieController.getMovieById);
+// Modifier un film par son ID
+router.patch("/api/movies/:id", movieController.updateMovie);
+// Supprimer un film par son ID
+router.delete("/api/movies/:id", movieController.deleteMovie);
 // Autocomplétion des films (pour le formulaire d'ajout de recette)
-router.get('/api/movies', movieController.autocomplete);
+router.get('/api/movies/autocomplete', movieController.autocomplete);
+// Récupérer les films par genre
+router.get("/api/movies/genre/:name", movieController.getByGenre);
 
     //CATEGORIES
 // Créer une catégorie
@@ -73,7 +93,6 @@ router.get("/api/categories", categoryController.getAllCategory);
 // Récupérer une catégorie par ID
 router.get("/api/categories/:id", categoryController.getCategoryById);
 // Modifier une catégorie par ID
-// patch et non put car on veut modifier une catégorie en particulier
 router.patch("/api/categories/:id", categoryController.updateCategory);
 // Supprimer une catégorie par ID
 router.delete("/api/categories/:id", categoryController.deleteCategory);

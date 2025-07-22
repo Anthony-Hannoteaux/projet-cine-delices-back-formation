@@ -173,6 +173,36 @@ const movieController = {
         error: "Erreur serveur"
       });
     }
+  },
+
+  // Récupérer les films par genre
+  getByGenre: async (req, res) => {
+  try {
+    const genreName = req.params.name;
+
+    const result = await client.query(`
+      SELECT movie.*
+      FROM movie
+      JOIN movie_has_genre ON movie.id = movie_has_genre.movie_id
+      JOIN genre ON movie_has_genre.genre_id = genre.id
+      WHERE genre.name = $1
+    `, [genreName]);
+
+    const enhancedMovies = result.rows.map((movie) => {
+      const isFullUrl = movie.poster_path?.startsWith("http://") || movie.poster_path?.startsWith("https://");
+      return {
+        ...movie,
+        poster_url: isFullUrl
+          ? movie.poster_path
+          : `http://localhost:3000/uploads/${movie.poster_path}`
+      };
+    });
+
+    res.status(200).json(enhancedMovies);
+  } catch (error) {
+    console.error("Erreur getByGenre:", error);
+    res.status(500).json({ error: "Erreur serveur." });
   }
+}
 };
 export default movieController;

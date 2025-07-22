@@ -96,7 +96,6 @@ const recipeController = {
   getOneRecipe: async (req, res) => {
     try {
       const recipeId = parseInt(req.params.id, 10);
-      console.log("ID reçu pour getOneRecipe :", req.params.id);
       const recipe = await Recipe.findById(recipeId);
 
       if (!recipe) {
@@ -185,7 +184,37 @@ updateRecipe: async (req, res) => {
     console.error('deleteRecipe:', error);
     res.status(500).json({ error: 'Erreur lors de la suppression de la recette' });
   }
-}
+},
+
+  // Récupérer les recettes par catégorie
+  getByCategory: async (req, res) => {
+    try {
+      const categoryName = req.params.name;
+
+      const result = await client.query(`
+        SELECT recipe.*
+        FROM recipe
+        JOIN recipe_has_category ON recipe.id = recipe_has_category.recipe_id
+        JOIN category ON recipe_has_category.category_id = category.id
+        WHERE category.name = $1
+      `, [categoryName]);
+
+      const enhancedRecipes = result.rows.map((recipe) => {
+            const isFullUrl = recipe.picture?.startsWith("http://") || recipe.picture?.startsWith("https://");
+            return {
+              ...recipe,
+              picture_url: isFullUrl
+                ? recipe.picture
+                : `http://localhost:3000/uploads/${recipe.picture}`
+            };
+          });
+
+          res.status(200).json(enhancedRecipes);
+        } catch (error) {
+          console.error("Erreur getByCategory:", error);
+          res.status(500).json({ error: "Erreur serveur." });
+        }
+      }
 };
 
 export default recipeController;
