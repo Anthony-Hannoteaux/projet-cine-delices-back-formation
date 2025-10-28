@@ -1,13 +1,15 @@
 import pg from "pg";
 // import * as dotenv from "dotenv";
 import dotenv from "dotenv";
-                      
-dotenv.config();      
-                      
-                      
-// Fichier .env n'est pas lu.. à corriger avant de push !
+
+// Lecture de nos variables d'environnement
+dotenv.config();
+
+// Création de notre objet client
 const client = new pg.Client();
-                      
-client.connect();     
-                      
+
+// Connexion à notre DB
+client.connect();
+
+// Export pour pouvoir utiliser les méthodes associées
 export default client;

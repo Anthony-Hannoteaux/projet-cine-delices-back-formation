@@ -39,20 +39,20 @@ class Recipe {
     toJSON() {
         // Méthode pour convertir l'instance de la classe Recipe en objet JSON (sinon les données ne seront pas sérialisées correctement)
         return {
-        id: this.id,
-        title: this.title,
-        description: this.description,
-        difficulty: this.difficulty,
-        budget: this.budget,
-        servings: this.servings,
-        preparation_time: this.preparation_time,
-        cook_time: this.cook_time,
-        steps: this.steps,
-        story: this.story,
-        picture: this.picture,
-        user_id: this.user_id,
-        movie_id: this.movie_id,
-        average_rating: this.average_rating,
+            id: this.id,
+            title: this.title,
+            description: this.description,
+            difficulty: this.difficulty,
+            budget: this.budget,
+            servings: this.servings,
+            preparation_time: this.preparation_time,
+            cook_time: this.cook_time,
+            steps: this.steps,
+            story: this.story,
+            picture: this.picture,
+            user_id: this.user_id,
+            movie_id: this.movie_id,
+            average_rating: this.average_rating,
         };
     }
 
@@ -190,44 +190,44 @@ class Recipe {
     // Utilisation de la méthode db.query pour insérer les données dans la table "recipes"
     // Les paramètres de la requête sont passés sous forme de tableau
     async create() {
-    try {
-        // 1. Insérer la recette
-        const result = await client.query(
-        `INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id)
+        try {
+            // 1. Insérer la recette
+            const result = await client.query(
+                `INSERT INTO recipe (title, description, difficulty, budget, servings, preparation_time, cook_time, story, picture, user_id, movie_id)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING id`,
-        [
-            this.title,
-            this.description,
-            this.difficulty,
-            this.budget,
-            this.servings,
-            this.preparation_time,
-            this.cook_time,
-            this.story,
-            this.picture,
-            this.user_id,
-            this.movie_id
-        ]
-        );
-
-        const recipeId = result.rows[0].id;
-
-        // 2. Insérer les étapes
-        if (this.steps && Array.isArray(this.steps)) {
-        for (let i = 0; i < this.steps.length; i++) {
-            await client.query(
-            `INSERT INTO step (content, position, recipe_id) VALUES ($1, $2, $3)`,
-            [this.steps[i], i + 1, recipeId]
+                [
+                    this.title,
+                    this.description,
+                    this.difficulty,
+                    this.budget,
+                    this.servings,
+                    this.preparation_time,
+                    this.cook_time,
+                    this.story,
+                    this.picture,
+                    this.user_id,
+                    this.movie_id
+                ]
             );
-        }
-        }
 
-        return recipeId;
-    } catch (error) {
-        console.error("Erreur createRecipe:", error);
-        throw error;
-    }
+            const recipeId = result.rows[0].id;
+
+            // 2. Insérer les étapes
+            if (this.steps && Array.isArray(this.steps)) {
+                for (let i = 0; i < this.steps.length; i++) {
+                    await client.query(
+                        `INSERT INTO step (content, position, recipe_id) VALUES ($1, $2, $3)`,
+                        [this.steps[i], i + 1, recipeId]
+                    );
+                }
+            }
+
+            return recipeId;
+        } catch (error) {
+            console.error("Erreur createRecipe:", error);
+            throw error;
+        }
     }
 
 
@@ -236,7 +236,7 @@ class Recipe {
     // Utilisation de la méthode client
     // .query pour sélectionner les données de la table "recipes"
     static async findAll() {
-          const result = await client.query(`
+        const result = await client.query(`
             SELECT
             recipe.*,
             "user"."username" AS author_username
@@ -250,27 +250,27 @@ class Recipe {
 
     // Méthode statique pour trouver une recette par son ID
     static async findById(id) {
-  /**
-   * Cette requête récupère une recette complète par son ID.
-   * Elle inclut :
-   * - Toutes les colonnes de la table `recipe`
-   * - Les informations de l'utilisateur qui a créé la recette (`username`, `email`)
-   * - Les étapes de préparation, agrégées en un tableau JSON
-   * - La note moyenne calculée dynamiquement à partir de `rating_sum` et `rating_count`
-   */
-  const result = await client.query(`
+        /**
+       * Cette requête récupère une recette complète par son ID.
+       * Elle inclut :
+       * - Toutes les colonnes de la table `recipe`
+       * - Les informations de l'utilisateur qui a créé la recette (`username`, `email`)
+       * - Les étapes de préparation, agrégées en un tableau JSON
+       * - La note moyenne calculée dynamiquement à partir de `rating_sum` et `rating_count`
+       */
+        const result = await client.query(`
     SELECT recipe.*, "user".username, "user".email,
-      json_agg(json_build_object('number', step.number, 'description', step.description)) AS steps,
-      CASE
+        json_agg(json_build_object('number', step.number, 'description', step.description)) AS steps,
+        CASE
         WHEN recipe.rating_count = 0 THEN 0
         ELSE ROUND(recipe.rating_sum::numeric / recipe.rating_count, 2)
-      END AS average_rating
+        END AS average_rating
     FROM recipe
     JOIN "user" ON recipe.user_id = "user".id
     LEFT JOIN step ON recipe.id = step.recipe_id
     WHERE recipe.id = $1
     GROUP BY recipe.id, "user".username, "user".email
-  `, [id]);
+    `, [id]);
 
         // Vérifie si une recette a été trouvée
         const recipeData = result.rows[0];
@@ -315,7 +315,7 @@ class Recipe {
         user_id = $10,
         movie_id = $11
     WHERE id = $12
-  `, [
+    `, [
             this.title,
             this.description,
             this.difficulty,
@@ -338,7 +338,7 @@ class Recipe {
     async delete() {
         const result = await client.query(`DELETE FROM "recipe"
             WHERE "recipe"."id" = $1`, [this.id]);
-        
+
         // Retourne le nombre de lignes supprimées
         return result.rowCount;
     }
@@ -374,7 +374,7 @@ class Recipe {
         const result = await client.query(query, [userId]);
         console.log("Résultat brut de la requête :", result);
         return parseFloat(result.rows[0].average_rating);
-        }
+    }
 
 }
 

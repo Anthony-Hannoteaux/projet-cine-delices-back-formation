@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 
 import mainController from "./controllers/mainController.js";
-import userController from "./controllers/userController.js";
+import userController from "./controllers/userController.js"
 import authController from "./controllers/authController.js";
 import apiController from "./controllers/apiController.js";
 import categoryController from "./controllers/categoryController.js";
@@ -32,7 +32,7 @@ router.get("/catalogue", apiController.catalogue);
 router.get("/api/search", searchController.searchAll);
 
 
-    //USERS
+//USERS
 // Créer un utilisateur
 router.post("/api/users/", userController.createNewUser);
 // Récupérer tous les utilisateurs

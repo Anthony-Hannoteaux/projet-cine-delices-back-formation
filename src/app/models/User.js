@@ -16,7 +16,7 @@ class User {
         this.password = config.password;
         this.is_active = config.is_active;
     }
-    
+
     // mise en place des getters
     get id() {
         return this.#id;
@@ -34,9 +34,9 @@ class User {
         return this.#password;
     }
 
-      get is_active() {
-    return this.#is_active;
-  }
+    get is_active() {
+        return this.#is_active;
+    }
 
 
     // mise en place des setteurs (mutateurs)
@@ -61,10 +61,10 @@ class User {
     set password(value) {
         this.#password = value;
     }
-    
-      set is_active(value) {
-    this.#is_active = value;
-  }
+
+    set is_active(value) {
+        this.#is_active = value;
+    }
 
     // mise en place du CRUD via le design pattern active record
     async create() {
@@ -103,31 +103,32 @@ class User {
     // modification
     async update() {
         try {
-        const result = await client.query(`UPDATE "user"
+            const result = await client.query(`UPDATE "user"
             SET
                 "username" = $1,
                 "email" = $2,
                 "password" = $3,
                 "is_active" = $4
             WHERE "id"= $5`, [
-            this.#username,
-            this.#email,
-            this.#password,
-            this.#is_active,
-            this.#id
-        ])
-        return result.rowCount;
-    } catch (error) {
-  console.error("Erreur SQL UPDATE :", error);
-  throw error;
-}}
+                this.#username,
+                this.#email,
+                this.#password,
+                this.#is_active,
+                this.#id
+            ])
+            return result.rowCount;
+        } catch (error) {
+            console.error("Erreur SQL UPDATE :", error);
+            throw error;
+        }
+    }
 
     // suppression d'un enregistrement à partir de l'id
     async delete() {
         try {
             const result = await client.query(
-            `DELETE FROM "user" WHERE "id" = $1`,
-            [this.#id]
+                `DELETE FROM "user" WHERE "id" = $1`,
+                [this.#id]
             );
             return result.rowCount;
         } catch (error) {
